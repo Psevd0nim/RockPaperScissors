@@ -4,31 +4,41 @@ namespace SkillsArena
 {
     public class BootstrapState : IDefaultState
     {
+        private ICoroutineRunner _coroutineRunner;
         private ServiceLocator _serviceLocator;
         private GameStateMachine _gameStateMachine;
 
-        public BootstrapState(ServiceLocator serviceLocator, GameStateMachine gameStateMachine)
+        public BootstrapState(ICoroutineRunner coroutineRunner, ServiceLocator serviceLocator, GameStateMachine gameStateMachine)
         {
+            _coroutineRunner = coroutineRunner;
             _serviceLocator = serviceLocator;
             _gameStateMachine = gameStateMachine;
         }
 
         public void Enter()
         {
-            RegisterServices();
+            AppServices appServices = CreateAppServices();
+            RegisterServices(appServices);
+            _gameStateMachine.SetAppServices(appServices);
         }
 
-        private void RegisterServices()
+        private AppServices CreateAppServices()
         {
-            _serviceLocator.RegisterService(GetInputService());
-            _serviceLocator.RegisterService(new GameFactory());
-            _serviceLocator.RegisterService(new SaveAndLoadData());
-            _serviceLocator.RegisterService(_serviceLocator.GetService<SaveAndLoadData>().LoadGameData());
+            SceneLoader sceneLoader = new SceneLoader(_coroutineRunner);
+            InputService inputService = Application.isMobilePlatform ? new MobileInput() : new DesktopInput();
+            GameFactory gameFactory = new GameFactory();
+            SaveAndLoadData saveAndLoadData = new SaveAndLoadData();
+            GameData gameData = saveAndLoadData.LoadGameData();
+
+            return new AppServices(sceneLoader, inputService, gameFactory, saveAndLoadData, gameData);
         }
 
-        private InputService GetInputService()
+        private void RegisterServices(AppServices appServices)
         {
-            return Application.isMobilePlatform? new MobileInput() : new DesktopInput();
+            _serviceLocator.RegisterService(appServices.InputService);
+            _serviceLocator.RegisterService(appServices.GameFactory);
+            _serviceLocator.RegisterService(appServices.SaveAndLoadData);
+            _serviceLocator.RegisterService(appServices.GameData);
         }
 
         public void Exit()

@@ -13,10 +13,14 @@ namespace SkillsArena
 
         public void Enter()
         {
-            LevelContext levelContext = Object.FindAnyObjectByType<LevelContext>();
-            LevelManager levelManager = levelContext.levelManager;
+            LevelManager levelManager = Object.FindAnyObjectByType<LevelManager>();
+            if (levelManager == null)
+            {
+                throw new System.Exception("LevelManager not found on loaded scene.");
+            }
+
             levelManager.OnExitLevel += OnChangeLevel;
-            levelManager.Init();
+            levelManager.Init(_stateMachine.AppServices);
             levelManager.StartLevel();
         }
 

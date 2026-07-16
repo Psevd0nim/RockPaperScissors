@@ -5,14 +5,12 @@ namespace SkillsArena
 {
     public class LoadLevelState : IPayloadedState<string, float>
     {
-        private SceneLoader _sceneLoader;
         private GameStateMachine _gameStateMachine;
 
         private bool _isFirstLoad = true;
 
-        public LoadLevelState(SceneLoader sceneLoader, GameStateMachine gameStateMachine)
+        public LoadLevelState(GameStateMachine gameStateMachine)
         {
-            _sceneLoader = sceneLoader;
             _gameStateMachine = gameStateMachine;
         }
 
@@ -24,7 +22,7 @@ namespace SkillsArena
                 _isFirstLoad = false;
             }
             else
-                _sceneLoader.LoadSceneByName(name, time, AfterLevelLoaded);
+                _gameStateMachine.AppServices.SceneNavigator.LoadScene(name, time, AfterLevelLoaded);
         }
 
         public void Exit()

@@ -27,12 +27,12 @@ namespace SkillsArena
 
         private LevelData levelData = new LevelData();
 
-        public override void Init()
+        public override void Init(AppServices appServices)
         {
             _serviceLocator = ServiceLocator.Instance;
-            _gameData = _serviceLocator.GetService<GameData>();
-            _saveAndLoadDataService = _serviceLocator.GetService<SaveAndLoadData>();
-            _inputService = ServiceLocator.Instance.GetService<InputService>();
+            _gameData = appServices.GameData;
+            _saveAndLoadDataService = appServices.SaveAndLoadData;
+            _inputService = appServices.InputService;
 
             if (!_gameData.WasInited)
                 InitGameData();

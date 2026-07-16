@@ -21,11 +21,11 @@ namespace SkillsArena
 
         private List<IPausable> pausables = new();
 
-        public override void Init()
+        public override void Init(AppServices appServices)
         {
-            _gameFactory = ServiceLocator.Instance.GetService<GameFactory>();
-            _gameData = ServiceLocator.Instance.GetService<GameData>();
-            _inputService = ServiceLocator.Instance.GetService<InputService>();
+            _gameFactory = appServices.GameFactory;
+            _gameData = appServices.GameData;
+            _inputService = appServices.InputService;
 
             _collectorLevelUIManager.Init(this);
             _collectorLevelUIManager.OnPausePressed += SetPauseStatus;

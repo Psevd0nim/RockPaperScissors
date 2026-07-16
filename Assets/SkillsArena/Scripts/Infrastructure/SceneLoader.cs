@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace SkillsArena
 {
-    public class SceneLoader
+    public class SceneLoader : ISceneNavigator
     {
         private ICoroutineRunner _coroutineRunner;
 
@@ -14,20 +14,24 @@ namespace SkillsArena
             _coroutineRunner = coroutineRunner;
         }
 
-        public void LoadSceneByName(string name, float time, Action onLoadedCallback)
+        public void LoadScene(string sceneName, float delay = 0f, Action onLoaded = null)
         {
-            _coroutineRunner.StartCoroutine(LoadSceneAsync(name, time, onLoadedCallback));
+            _coroutineRunner.StartCoroutine(LoadSceneAsync(sceneName, delay, onLoaded));
         }
 
-        private IEnumerator LoadSceneAsync(string name, float time, Action onLoadedCallback)
+        private IEnumerator LoadSceneAsync(string sceneName, float delay, Action onLoaded)
         {
-            yield return new WaitForSeconds(time);
-            AsyncOperation loadSceneOperation = SceneManager.LoadSceneAsync(name);
+            if (delay > 0f)
+            {
+                yield return new WaitForSeconds(delay);
+            }
+
+            AsyncOperation loadSceneOperation = SceneManager.LoadSceneAsync(sceneName);
             while (!loadSceneOperation.isDone)
             {
                 yield return null;
             }
-            onLoadedCallback?.Invoke();
+            onLoaded?.Invoke();
         }
     }
 }

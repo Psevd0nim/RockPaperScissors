@@ -5,17 +5,24 @@ namespace SkillsArena
 {
     public class GameStateMachine
     {
+        public AppServices AppServices { get; private set; }
+
         private Dictionary<Type, IState> _states;
         private IState _activeState;
 
-        public GameStateMachine(SceneLoader sceneLoader, ServiceLocator serviceLocator)
+        public GameStateMachine(ICoroutineRunner coroutineRunner, ServiceLocator serviceLocator)
         {
             _states = new Dictionary<Type, IState>()
             {
-                [typeof(BootstrapState)] = new BootstrapState(serviceLocator, this),
-                [typeof(LoadLevelState)] = new LoadLevelState(sceneLoader, this),
+                [typeof(BootstrapState)] = new BootstrapState(coroutineRunner, serviceLocator, this),
+                [typeof(LoadLevelState)] = new LoadLevelState(this),
                 [typeof(StartGameState)] = new StartGameState(this)
             };
+        }
+
+        public void SetAppServices(AppServices appServices)
+        {
+            AppServices = appServices;
         }
 
         public void Enter<TState>() where TState : class, IDefaultState
