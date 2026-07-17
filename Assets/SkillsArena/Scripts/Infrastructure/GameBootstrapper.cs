@@ -8,6 +8,8 @@ namespace SkillsArena
         private static GameBootstrapper _instance;
         private GameStateMachine _gameStateMachine;
 
+        [SerializeField] private AudioManager _audioManager;
+
         private void Awake()
         {
             if (_instance != null)
