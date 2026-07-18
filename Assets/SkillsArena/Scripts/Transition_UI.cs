@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class Transition_UI : MonoBehaviour
     {

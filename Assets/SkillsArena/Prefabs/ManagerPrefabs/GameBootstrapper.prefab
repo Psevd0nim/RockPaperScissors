@@ -352,3 +352,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a198b6ce461f5564b93fcdf8dbf014a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameBootstrapper
+  _audioManager: {fileID: 7561929875095970009}

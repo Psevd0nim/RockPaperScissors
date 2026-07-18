@@ -1,9 +1,4 @@
-namespace SkillsArena
+public enum InputType
 {
-    public enum InputLikeKeyboardType
-    {
-        None, Left, Right, Up, Down,
-        Escape,
-        Space
-    }
+    None, NumberOne, NumberTwo, NumberThree, Space, Ecsape
 }

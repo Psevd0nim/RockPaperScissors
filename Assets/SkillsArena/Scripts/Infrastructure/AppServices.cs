@@ -1,4 +1,4 @@
-namespace SkillsArena
+namespace MyProject
 {
     public class AppServices
     {
@@ -7,19 +7,27 @@ namespace SkillsArena
         public GameFactory GameFactory { get; }
         public SaveAndLoadData SaveAndLoadData { get; }
         public GameData GameData { get; }
+        public AudioManager AudioManager { get; }
 
         public AppServices(
             ISceneNavigator sceneNavigator,
             InputService inputService,
             GameFactory gameFactory,
             SaveAndLoadData saveAndLoadData,
-            GameData gameData)
+            GameData gameData,
+            AudioManager audioManager)
         {
             SceneNavigator = sceneNavigator;
             InputService = inputService;
             GameFactory = gameFactory;
             SaveAndLoadData = saveAndLoadData;
             GameData = gameData;
+            AudioManager = audioManager;
         }
+    }
+
+    public class GameData
+    {
+        
     }
 }

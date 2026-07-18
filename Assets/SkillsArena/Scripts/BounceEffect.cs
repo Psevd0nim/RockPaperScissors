@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class BounceEffect : MonoBehaviour, IPointerClickHandler
     {

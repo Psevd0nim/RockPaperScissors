@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class SceneLoader : ISceneNavigator
     {

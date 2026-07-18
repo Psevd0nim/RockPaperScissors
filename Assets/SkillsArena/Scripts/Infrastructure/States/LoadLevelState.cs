@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class LoadLevelState : IPayloadedState<string, float>
     {

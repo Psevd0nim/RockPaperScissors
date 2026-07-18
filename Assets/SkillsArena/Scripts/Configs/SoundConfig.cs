@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkillsArena
+namespace MyProject
 {
     [CreateAssetMenu]
     public class SoundConfig : ScriptableObject

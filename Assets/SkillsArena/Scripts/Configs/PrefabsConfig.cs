@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 
-namespace SkillsArena
+namespace MyProject
 {
     [CreateAssetMenu]
     public class PrefabsConfig : ScriptableObject
     {
-        public SkillBallForCollector skillBallForCollectorPrefab;
-        public SkillBallForBattle skillBallForBattlePrefab;
-        public GameObject deathBallParticleDefault;
+        
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class Button_UI : MonoBehaviour
     {
@@ -10,7 +10,6 @@ namespace SkillsArena
         public virtual void Pressed()
         {
             OnPressed?.Invoke();
-            AudioManager.Instance.PlaySomeSound(SoundType.ClickButton);
         }
     }
 }

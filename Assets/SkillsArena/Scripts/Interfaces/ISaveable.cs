@@ -1,4 +1,4 @@
-namespace SkillsArena
+namespace MyProject
 {
     public interface ISaveable
     {

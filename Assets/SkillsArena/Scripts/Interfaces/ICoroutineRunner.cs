@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace SkillsArena
+namespace MyProject
 {
     public interface ICoroutineRunner
     {

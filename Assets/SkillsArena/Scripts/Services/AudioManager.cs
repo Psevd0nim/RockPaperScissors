@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class AudioManager : MonoBehaviour, IService
     {

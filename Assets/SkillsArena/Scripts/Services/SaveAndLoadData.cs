@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class SaveAndLoadData : IService
     {

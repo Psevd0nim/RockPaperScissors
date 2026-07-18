@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace SkillsArena
+namespace MyProject
 {
     public abstract class LevelManager : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class DesktopInput : InputService
     {
@@ -21,43 +21,15 @@ namespace SkillsArena
             return mousePosInWorld;
         }
 
-        public override InputLikeKeyboardType GetCurrentKeyWasPressedThisFrame()
+        public override InputType GetCurrentKeyWasPressedThisFrame()
         {
-            InputLikeKeyboardType inputType = InputLikeKeyboardType.None;
-
-            if (_currentKeyboard.wKey.wasPressedThisFrame || _currentKeyboard.upArrowKey.wasPressedThisFrame)
-                inputType = InputLikeKeyboardType.Up;
-            if (_currentKeyboard.sKey.wasPressedThisFrame || _currentKeyboard.downArrowKey.wasPressedThisFrame)
-                inputType = InputLikeKeyboardType.Down;
-            if (_currentKeyboard.aKey.wasPressedThisFrame || _currentKeyboard.leftArrowKey.wasPressedThisFrame)
-                inputType = InputLikeKeyboardType.Left;
-            if (_currentKeyboard.dKey.wasPressedThisFrame || _currentKeyboard.rightArrowKey.wasPressedThisFrame)
-                inputType = InputLikeKeyboardType.Right;
-            if(_currentKeyboard.escapeKey.wasPressedThisFrame)
-                inputType = InputLikeKeyboardType.Escape;
-            if(_currentKeyboard.spaceKey.wasPressedThisFrame)
-                inputType = InputLikeKeyboardType.Space;
-
+            InputType inputType = InputType.None;
             return inputType;
         }
 
-        public override InputLikeKeyboardType GetCurrentKeyWasReleasedThisFrame()
+        public override InputType GetCurrentKeyWasReleasedThisFrame()
         {
-            InputLikeKeyboardType inputType = InputLikeKeyboardType.None;
-
-            if (_currentKeyboard.wKey.wasReleasedThisFrame || _currentKeyboard.upArrowKey.wasReleasedThisFrame)
-                inputType = InputLikeKeyboardType.Up;
-            if (_currentKeyboard.sKey.wasReleasedThisFrame || _currentKeyboard.downArrowKey.wasReleasedThisFrame)
-                inputType = InputLikeKeyboardType.Down;
-            if (_currentKeyboard.aKey.wasReleasedThisFrame || _currentKeyboard.leftArrowKey.wasReleasedThisFrame)
-                inputType = InputLikeKeyboardType.Left;
-            if (_currentKeyboard.dKey.wasReleasedThisFrame || _currentKeyboard.rightArrowKey.wasReleasedThisFrame)
-                inputType = InputLikeKeyboardType.Right;
-            if (_currentKeyboard.escapeKey.wasReleasedThisFrame)
-                inputType = InputLikeKeyboardType.Escape;
-            if (_currentKeyboard.spaceKey.wasReleasedThisFrame)
-                inputType = InputLikeKeyboardType.Space;
-
+            InputType inputType = InputType.None;
             return inputType;
         }
 

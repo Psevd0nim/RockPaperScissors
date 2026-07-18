@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class GameBootstrapper : MonoBehaviour, ICoroutineRunner
     {
@@ -20,7 +20,7 @@ namespace SkillsArena
             _instance = this;
             DontDestroyOnLoad(gameObject);
 
-            _gameStateMachine = new GameStateMachine(this, ServiceLocator.Instance);
+            _gameStateMachine = new GameStateMachine(this, _audioManager);
             _gameStateMachine.Enter<BootstrapState>();
         }
 

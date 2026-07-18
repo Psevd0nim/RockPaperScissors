@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class GameStateMachine
     {
@@ -10,11 +10,11 @@ namespace SkillsArena
         private Dictionary<Type, IState> _states;
         private IState _activeState;
 
-        public GameStateMachine(ICoroutineRunner coroutineRunner, ServiceLocator serviceLocator)
+        public GameStateMachine(ICoroutineRunner coroutineRunner, AudioManager audioManager)
         {
             _states = new Dictionary<Type, IState>()
             {
-                [typeof(BootstrapState)] = new BootstrapState(coroutineRunner, serviceLocator, this),
+                [typeof(BootstrapState)] = new BootstrapState(this, coroutineRunner, audioManager),
                 [typeof(LoadLevelState)] = new LoadLevelState(this),
                 [typeof(StartGameState)] = new StartGameState(this)
             };
@@ -29,6 +29,12 @@ namespace SkillsArena
         {
             TState currentState = ChangeState<TState>();
             currentState.Enter();
+        }
+
+        public void Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadedState<TPayload>
+        {
+            TState currentState = ChangeState<TState>();
+            currentState.Enter(payload);
         }
 
         public void Enter<TState, TPayload, TPayload2>(TPayload payload, TPayload2 payload2) where TState : class, IPayloadedState<TPayload, TPayload2>

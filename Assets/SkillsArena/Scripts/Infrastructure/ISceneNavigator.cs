@@ -1,6 +1,6 @@
 using System;
 
-namespace SkillsArena
+namespace MyProject
 {
     public interface ISceneNavigator
     {

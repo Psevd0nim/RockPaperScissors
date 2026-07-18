@@ -1,24 +1,23 @@
 ﻿using UnityEngine;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class BootstrapState : IDefaultState
     {
         private ICoroutineRunner _coroutineRunner;
-        private ServiceLocator _serviceLocator;
         private GameStateMachine _gameStateMachine;
+        private AudioManager _audioManager;
 
-        public BootstrapState(ICoroutineRunner coroutineRunner, ServiceLocator serviceLocator, GameStateMachine gameStateMachine)
+        public BootstrapState(GameStateMachine gameStateMachine, ICoroutineRunner coroutineRunner, AudioManager audioManager)
         {
             _coroutineRunner = coroutineRunner;
-            _serviceLocator = serviceLocator;
             _gameStateMachine = gameStateMachine;
+            _audioManager = audioManager;
         }
 
         public void Enter()
         {
             AppServices appServices = CreateAppServices();
-            RegisterServices(appServices);
             _gameStateMachine.SetAppServices(appServices);
         }
 
@@ -30,15 +29,7 @@ namespace SkillsArena
             SaveAndLoadData saveAndLoadData = new SaveAndLoadData();
             GameData gameData = saveAndLoadData.LoadGameData();
 
-            return new AppServices(sceneLoader, inputService, gameFactory, saveAndLoadData, gameData);
-        }
-
-        private void RegisterServices(AppServices appServices)
-        {
-            _serviceLocator.RegisterService(appServices.InputService);
-            _serviceLocator.RegisterService(appServices.GameFactory);
-            _serviceLocator.RegisterService(appServices.SaveAndLoadData);
-            _serviceLocator.RegisterService(appServices.GameData);
+            return new AppServices(sceneLoader, inputService, gameFactory, saveAndLoadData, gameData, _audioManager);
         }
 
         public void Exit()

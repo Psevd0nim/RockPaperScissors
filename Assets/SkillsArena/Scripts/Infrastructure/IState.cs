@@ -1,4 +1,4 @@
-﻿namespace SkillsArena
+﻿namespace MyProject
 {
     public interface IState
     {
@@ -8,6 +8,11 @@
     public interface IPayloadedState<PayloadValue, PayloadValue2> : IState
     {
         void Enter(PayloadValue value, PayloadValue2 value2);
+    }
+
+    public interface IPayloadedState<PayloadValue> : IState
+    {
+        void Enter(PayloadValue value);
     }
 
     public interface IDefaultState : IState

@@ -1,4 +1,4 @@
-namespace SkillsArena
+namespace MyProject
 {
     public static class Constants
     {

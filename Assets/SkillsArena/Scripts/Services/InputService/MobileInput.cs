@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace SkillsArena
+namespace MyProject
 {
     public class MobileInput : InputService
     {
@@ -22,31 +22,15 @@ namespace SkillsArena
             }
         }
 
-        public override InputLikeKeyboardType GetCurrentKeyWasPressedThisFrame()
+        public override InputType GetCurrentKeyWasPressedThisFrame()
         {
-            InputLikeKeyboardType inputType = InputLikeKeyboardType.None;
+            InputType inputType = InputType.None;
             return inputType;
         }
 
-        public override InputLikeKeyboardType GetCurrentKeyWasReleasedThisFrame()
+        public override InputType GetCurrentKeyWasReleasedThisFrame()
         {
-            InputLikeKeyboardType inputType = InputLikeKeyboardType.None;
-            if (LeftMouseOrSameWasReleasedThisFrame())
-            {
-                Vector2 endPos = GetInputPosition();
-                Vector2 delta = endPos - _startPos;
-                if (delta.magnitude > _minMagnitude)
-                {
-                    if(Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
-                    {
-                        inputType = delta.x > 0 ? InputLikeKeyboardType.Right : InputLikeKeyboardType.Left;
-                    }
-                    else
-                    {
-                        inputType = delta.y > 0 ? InputLikeKeyboardType.Up : InputLikeKeyboardType.Down;
-                    }
-                }
-            }
+            InputType inputType = InputType.None;
             return inputType;
         }
 

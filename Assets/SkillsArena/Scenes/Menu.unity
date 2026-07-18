@@ -185,7 +185,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 131679924}
-  - component: {fileID: 131679923}
+  - component: {fileID: 131679925}
   m_Layer: 0
   m_Name: MenuLevelManager
   m_TagString: Untagged
@@ -193,20 +193,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &131679923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 131679922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ae18520163f6d547be548c2ca477761, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MyProject.MenuLevelManager
-  _transition: {fileID: 2002640876}
-  _menuLevel_UI_Manager: {fileID: 435905812}
 --- !u!4 &131679924
 Transform:
   m_ObjectHideFlags: 0
@@ -222,6 +208,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &131679925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 131679922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae18520163f6d547be548c2ca477761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyProject.MenuLevelManager
+  _menuLevel_UI_Manager: {fileID: 435905814}
 --- !u!1 &147777245
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,7 +457,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 435905813}
-  - component: {fileID: 435905812}
+  - component: {fileID: 435905814}
   m_Layer: 0
   m_Name: MenuLevel_UI_Manager
   m_TagString: Untagged
@@ -466,20 +465,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &435905812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 435905811}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bb4162ef0d351b4d87f9e0936a9f956, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MyProject.MenuLevel_UI_Manager
-  _soundButton: {fileID: 1120343190}
-  _playButton: {fileID: 0}
 --- !u!4 &435905813
 Transform:
   m_ObjectHideFlags: 0
@@ -495,6 +480,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &435905814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 435905811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bb4162ef0d351b4d87f9e0936a9f956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyProject.MenuLevel_UI_Manager
+  _soundButton: {fileID: 1120343190}
 --- !u!1 &686535847
 GameObject:
   m_ObjectHideFlags: 0
@@ -785,14 +783,6 @@ PrefabInstance:
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 125
       objectReference: {fileID: 0}
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1128,17 +1118,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8936525640670977068, guid: 2e96daa0aa360e646bb5dc73e800acdb, type: 3}
   m_PrefabInstance: {fileID: 921412798}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2002640876 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3533395978835346427, guid: 2e96daa0aa360e646bb5dc73e800acdb, type: 3}
-  m_PrefabInstance: {fileID: 921412798}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7f75a3af194cc445bf8d268f67209fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MyProject.Layer
 --- !u!1 &125536557806041106
 GameObject:
   m_ObjectHideFlags: 0
