@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 115
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_LocalPosition.x
@@ -91,6 +91,18 @@ PrefabInstance:
     - target: {fileID: 1920502883383556531, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_Name
       value: Button_UI_Pause
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686992735827390881, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686992735827390881, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686992735827390881, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

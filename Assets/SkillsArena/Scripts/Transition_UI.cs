@@ -21,14 +21,12 @@ namespace MyProject
             image.material.SetFloat("_FillAmount", value);
         }
 
-        public void StartOpenAnim()
+        public void SetTransitionStatus(bool status)
         {
-            transitionAnimator.SetTrigger("Open");
-        }
-
-        public void StartCloseAnim()
-        {
-            transitionAnimator.SetTrigger("Close");
+            if (status)
+                transitionAnimator.SetTrigger("Open");
+            else
+                transitionAnimator.SetTrigger("Close");
         }
 
         private void InitProgressBar()
