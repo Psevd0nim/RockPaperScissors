@@ -10,12 +10,12 @@ namespace MyProject
         public void SaveGameData()
         {
             string jsonData = JsonConvert.SerializeObject(_gameData);
-            PlayerPrefs.SetString(Constants.GameDataKey, jsonData);
+            PlayerPrefs.SetString(Constants.SaveDataKey, jsonData);
         }
 
         public GameData LoadGameData()
         {
-            string jsonData = PlayerPrefs.GetString(Constants.GameDataKey, JsonConvert.SerializeObject(new GameData()));
+            string jsonData = PlayerPrefs.GetString(Constants.SaveDataKey, JsonConvert.SerializeObject(new GameData()));
             _gameData = JsonConvert.DeserializeObject<GameData>(jsonData);
             return _gameData;
         }
