@@ -24,12 +24,20 @@ namespace MyProject
         private AppServices CreateAppServices()
         {
             SceneLoader sceneLoader = new SceneLoader(_coroutineRunner);
-            InputService inputService = Application.isMobilePlatform ? new MobileInput() : new DesktopInput();
+            InputService inputService = new InputService();
             GameFactory gameFactory = new GameFactory();
             SaveAndLoadData saveAndLoadData = new SaveAndLoadData();
             GameData gameData = saveAndLoadData.LoadGameData();
+            FusionNetworkService networkService = new FusionNetworkService();
 
-            return new AppServices(sceneLoader, inputService, gameFactory, saveAndLoadData, gameData, _audioManager);
+            return new AppServices(
+                sceneLoader,
+                inputService,
+                gameFactory,
+                saveAndLoadData,
+                gameData,
+                _audioManager,
+                networkService);
         }
 
         public void Exit()

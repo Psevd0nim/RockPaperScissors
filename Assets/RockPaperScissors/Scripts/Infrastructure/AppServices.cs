@@ -8,6 +8,7 @@ namespace MyProject
         public SaveAndLoadData SaveAndLoadData { get; }
         public GameData GameData { get; }
         public AudioManager AudioManager { get; }
+        public FusionNetworkService NetworkService { get; }
 
         public AppServices(
             ISceneNavigator sceneNavigator,
@@ -15,7 +16,8 @@ namespace MyProject
             GameFactory gameFactory,
             SaveAndLoadData saveAndLoadData,
             GameData gameData,
-            AudioManager audioManager)
+            AudioManager audioManager,
+            FusionNetworkService networkService)
         {
             SceneNavigator = sceneNavigator;
             InputService = inputService;
@@ -23,6 +25,7 @@ namespace MyProject
             SaveAndLoadData = saveAndLoadData;
             GameData = gameData;
             AudioManager = audioManager;
+            NetworkService = networkService;
         }
     }
 
