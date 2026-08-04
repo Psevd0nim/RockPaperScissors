@@ -9,6 +9,10 @@ namespace MyProject
         public event Action<string> ConnectRequested;
         public event Action DisconnectRequested;
 
+        public event Action OnPlayPressed;
+
+        [SerializeField] private Button_UI _playButton;
+
         [Header("Network")]
         [SerializeField] private TMP_InputField _sessionNameInput;
         [SerializeField] private TMP_Text _connectionStatusText;
@@ -25,6 +29,13 @@ namespace MyProject
 
             if (_disconnectButton != null)
                 _disconnectButton.OnPressed += RequestDisconnect;
+
+            _playButton.OnPressed += AfterPlayButtonPressed;
+        }
+
+        private void AfterPlayButtonPressed()
+        {
+            OnPlayPressed?.Invoke();
         }
 
         public void ShowConnectionStatus(string status)

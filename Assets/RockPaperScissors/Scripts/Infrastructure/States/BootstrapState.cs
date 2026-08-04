@@ -42,7 +42,7 @@ namespace MyProject
 
         public void Exit()
         {
-            Debug.Log($"Out from {GetType()}");
+            
         }
     }
 }

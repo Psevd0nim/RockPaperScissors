@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 
 namespace MyProject
@@ -6,14 +7,14 @@ namespace MyProject
     {
         [SerializeField] private MenuLevel_UI_Manager _menuLevel_UI_Manager;
 
-        private MenuNetworkController _networkController;
+        private FusionNetworkService _fusionNetworkService;
 
         public override void Init(AppServices appServices)
         {
             _menuLevel_UI_Manager.Init(appServices.AudioManager);
+            _menuLevel_UI_Manager.OnPlayPressed += AfterPlayPressed;
 
-            _networkController = new MenuNetworkController(_menuLevel_UI_Manager, appServices.NetworkService);
-            _networkController.Init();
+            _fusionNetworkService = new();
         }
 
         public override void StartLevel()
@@ -21,9 +22,13 @@ namespace MyProject
             
         }
 
-        private void OnDestroy()
+        private async void AfterPlayPressed()
         {
-            _networkController?.Dispose();
+            StartGameResult startGameResult = await _fusionNetworkService.StartGameAsync();
+
+            Debug.Log($"StartGameResult.Ok: {startGameResult.Ok}");
+            Debug.Log($"StartGameResult.ShutdownReason: {startGameResult.ShutdownReason}");
+            Debug.Log($"StartGameResult.ErrorMessage: \"{startGameResult.ErrorMessage}\"");
         }
     }
 }

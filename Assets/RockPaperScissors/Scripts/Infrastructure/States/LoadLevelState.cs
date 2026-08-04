@@ -27,12 +27,11 @@ namespace MyProject
 
         public void Exit()
         {
-            Debug.Log($"Out from {GetType()}");
+            
         }
 
         private void AfterLevelLoaded()
         {
-            Debug.Log(SceneManager.GetActiveScene().name);
             _gameStateMachine.Enter<StartGameState>();
         }
     }
