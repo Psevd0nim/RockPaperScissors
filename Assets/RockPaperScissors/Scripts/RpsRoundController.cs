@@ -8,9 +8,6 @@ namespace MyProject
         private MenuLevel_UI_Manager _menuUI;
         private NetworkPlayerEntity _localPlayerEntity;
         private NetworkPlayerEntity _opponentPlayerEntity;
-        private Coroutine _showResultCoroutine;
-        private bool _roundInProgress;
-        private bool _waitingForChoicesReset;
 
         public void Init(MenuLevel_UI_Manager menuUI)
         {
@@ -20,76 +17,56 @@ namespace MyProject
 
         public void StartGame(NetworkPlayerEntity localPlayerEntity, NetworkPlayerEntity opponentPlayerEntity, int localPlayerId, int opponentPlayerId)
         {
-            StopGame(false);
-
             _localPlayerEntity = localPlayerEntity;
             _opponentPlayerEntity = opponentPlayerEntity;
 
-            _localPlayerEntity.EntityChanged += PlayerEntityChanged;
-            _opponentPlayerEntity.EntityChanged += PlayerEntityChanged;
+            _localPlayerEntity.ChoiceChanged += PlayerChoiceChanged;
+            _opponentPlayerEntity.ChoiceChanged += PlayerChoiceChanged;
+            _localPlayerEntity.ScoreChanged += UpdateScores;
+            _opponentPlayerEntity.ScoreChanged += UpdateScores;
 
             _menuUI.ShowGame(localPlayerId, opponentPlayerId);
-            PlayerEntityChanged();
+            UpdateScores();
         }
 
-        public void StopGame(bool resetMatch)
+        public void ResetGame()
         {
-            if (_showResultCoroutine != null)
-            {
-                StopCoroutine(_showResultCoroutine);
-                _showResultCoroutine = null;
-            }
+            //При каком условии эта проверка может сработать? В рамках текущего кода
+            if (_localPlayerEntity == null)
+                return;
 
-            if (_localPlayerEntity != null)
-                _localPlayerEntity.EntityChanged -= PlayerEntityChanged;
+            StopAllCoroutines();
+
+            _localPlayerEntity.ChoiceChanged -= PlayerChoiceChanged;
+            _localPlayerEntity.ScoreChanged -= UpdateScores;
 
             if (_opponentPlayerEntity != null)
-                _opponentPlayerEntity.EntityChanged -= PlayerEntityChanged;
+            {
+                _opponentPlayerEntity.ChoiceChanged -= PlayerChoiceChanged;
+                _opponentPlayerEntity.ScoreChanged -= UpdateScores;
+            }
 
-            if (resetMatch && _localPlayerEntity != null)
-                _localPlayerEntity.ResetMatch();
+            _localPlayerEntity.Reset();
 
             _localPlayerEntity = null;
             _opponentPlayerEntity = null;
-            _roundInProgress = false;
-            _waitingForChoicesReset = false;
         }
 
         private void SelectChoice(RpsChoice choice)
         {
-            if (_localPlayerEntity == null)
-                return;
-
-            if (_localPlayerEntity.CanSelectChoice == false)
-                return;
-
             _localPlayerEntity.SelectChoice(choice);
-            _menuUI.ShowLocalChoice(_localPlayerEntity.Choice);
+            _menuUI.ShowLocalChoice(choice);
         }
 
-        private void PlayerEntityChanged()
+        private void PlayerChoiceChanged()
         {
-            if (_localPlayerEntity == null || _opponentPlayerEntity == null)
-                return;
-
-            _menuUI.UpdateScores(_localPlayerEntity.Score, _opponentPlayerEntity.Score);
-
-            if (_waitingForChoicesReset)
-            {
-                StartNextRoundWhenChoicesAreReset();
-                return;
-            }
-
-            if (_roundInProgress)
-                return;
-
             bool bothPlayersSelected = _localPlayerEntity.Choice != RpsChoice.None && _opponentPlayerEntity.Choice != RpsChoice.None;
+            bool bothChoicesAreReset = _localPlayerEntity.Choice == RpsChoice.None && _opponentPlayerEntity.Choice == RpsChoice.None;
 
-            if (bothPlayersSelected == false)
-                return;
-
-            _roundInProgress = true;
-            _showResultCoroutine = StartCoroutine(ShowRoundResult());
+            if (bothPlayersSelected)
+                StartCoroutine(ShowRoundResult());
+            else if (bothChoicesAreReset)
+                _menuUI.PrepareNextRound();
         }
 
         private IEnumerator ShowRoundResult()
@@ -101,26 +78,14 @@ namespace MyProject
 
             _menuUI.ShowRound(_localPlayerEntity.Choice, _opponentPlayerEntity.Choice, result);
 
-            _menuUI.UpdateScores(_localPlayerEntity.Score, _opponentPlayerEntity.Score);
-
             yield return new WaitForSeconds(2f);
 
-            _waitingForChoicesReset = true;
-            _showResultCoroutine = null;
             _localPlayerEntity.ResetChoice();
-            StartNextRoundWhenChoicesAreReset();
         }
 
-        private void StartNextRoundWhenChoicesAreReset()
+        private void UpdateScores()
         {
-            bool bothChoicesAreReset = _localPlayerEntity.Choice == RpsChoice.None && _opponentPlayerEntity.Choice == RpsChoice.None;
-
-            if (bothChoicesAreReset == false)
-                return;
-
-            _waitingForChoicesReset = false;
-            _roundInProgress = false;
-            _menuUI.PrepareNextRound();
+            _menuUI.UpdateScores(_localPlayerEntity.Score, _opponentPlayerEntity.Score);
         }
 
         private RpsRoundResult GetRoundResult(RpsChoice localChoice, RpsChoice opponentChoice)
@@ -134,14 +99,6 @@ namespace MyProject
                 || localChoice == RpsChoice.Scissors && opponentChoice == RpsChoice.Paper;
 
             return localPlayerWon ? RpsRoundResult.Win : RpsRoundResult.Lose;
-        }
-
-        private void OnDestroy()
-        {
-            if (_menuUI != null)
-                _menuUI.ChoiceSelected -= SelectChoice;
-
-            StopGame(false);
         }
     }
 }

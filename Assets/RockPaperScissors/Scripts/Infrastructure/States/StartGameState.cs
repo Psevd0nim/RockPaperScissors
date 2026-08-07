@@ -19,14 +19,14 @@ namespace MyProject
                 throw new System.Exception("LevelManager not found on loaded scene.");
             }
 
-            levelManager.OnExitLevel += OnChangeScene;
+            levelManager.OnExitLevel += ChangeScene;
             levelManager.Init(_stateMachine.AppServices);
             levelManager.StartLevel();
         }
 
-        private void OnChangeScene(LevelManager levelManager, string levelName, float time)
+        private void ChangeScene(LevelManager levelManager, string levelName, float time)
         {
-            levelManager.OnExitLevel -= OnChangeScene;
+            levelManager.OnExitLevel -= ChangeScene;
             _stateMachine.Enter<LoadLevelState, string, float>(levelName, time);
         }
 

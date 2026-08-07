@@ -155,6 +155,11 @@ namespace MyProject
             _playButton.gameObject.SetActive(false);
         }
 
+        public void ShowPlayButton()
+        {
+            _playButton.gameObject.SetActive(true);
+        }
+
         private void OnDestroy()
         {
             _playButton.OnPressed -= AfterPlayButtonPressed;

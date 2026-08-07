@@ -9,9 +9,11 @@ namespace MyProject
         [SerializeField] private MenuLevel_UI_Manager _menuLevel_UI_Manager;
         [SerializeField] private NetworkPlayerSpawner _networkPlayerSpawner;
         [SerializeField] private RpsRoundController _rpsRoundController;
+        [SerializeField] private ConnectingIndicator _connectingIndicator;
 
         private FusionNetworkService _fusionNetworkService;
-        private Coroutine _prepareGameCoroutine;
+
+        private bool _gameCompetitionStarted;
 
         public override void Init(AppServices appServices)
         {
@@ -21,9 +23,6 @@ namespace MyProject
             _rpsRoundController.Init(_menuLevel_UI_Manager);
 
             _fusionNetworkService = appServices.NetworkService;
-            _fusionNetworkService.PlayersChanged += RefreshPlayers;
-
-            RefreshPlayers();
         }
 
         public override void StartLevel()
@@ -32,50 +31,77 @@ namespace MyProject
 
         private void AfterPlayPressed()
         {
-            StartGameSession();
+            TryStartGameSession();
         }
 
-        private async void StartGameSession()
+        private async void TryStartGameSession()
         {
-            StartGameResult startGameResult = await _fusionNetworkService.StartGameAsync();
+            PrepareForConnection();
+
+            StartGameResult startGameResult = await _fusionNetworkService.StartGameSessionAsync();
 
             Debug.Log($"StartGameResult.Ok: {startGameResult.Ok}");
             Debug.Log($"StartGameResult.ShutdownReason: {startGameResult.ShutdownReason}");
             Debug.Log($"StartGameResult.ErrorMessage: \"{startGameResult.ErrorMessage}\"");
 
             if (startGameResult.Ok == false)
+            {
+                ResetAfterFailedConnection();
                 return;
+            }
 
-            _fusionNetworkService.RegisterGlobal(_networkPlayerSpawner);
-            _networkPlayerSpawner.SpawnEntityForExistingLocalPlayer();
-            _menuLevel_UI_Manager.HidePlayButton();
+            CompleteConnection();
         }
 
-        private void RefreshPlayers()
+        private void PrepareForConnection()
         {
-            StopPreparingGame();
+            _menuLevel_UI_Manager.HidePlayButton();
+            _connectingIndicator.Show();
+        }
 
+        private void ResetAfterFailedConnection()
+        {
+            _connectingIndicator.Hide();
+            _menuLevel_UI_Manager.ShowPlayButton();
+        }
+
+        private void CompleteConnection()
+        {
+            _connectingIndicator.Hide();
+            _fusionNetworkService.RegisterGlobal(_networkPlayerSpawner);
+            _networkPlayerSpawner.SpawnEntityForExistingLocalPlayer();
+
+            _fusionNetworkService.PlayersChanged += AfterTotalPlayersChanged;
+            AfterTotalPlayersChanged();
+        }
+
+        private void AfterTotalPlayersChanged()
+        {
             int playersCount = _fusionNetworkService.Players.Count;
             _menuLevel_UI_Manager.ShowPlayersCount(playersCount);
 
-            if (playersCount == 0)
+            switch (playersCount)
             {
-                _rpsRoundController.StopGame(false);
-                _menuLevel_UI_Manager.HidePlayers();
-                return;
+                case 1:
+                    _menuLevel_UI_Manager.ShowWaitingForPlayer();
+                    if (_gameCompetitionStarted)
+                    {
+                        _rpsRoundController.ResetGame();
+                        _gameCompetitionStarted = false;
+                    }
+                    break;
+                case 2:
+                    StartGameCompetitionForTwoPlayers();
+                    break;
             }
+        }
 
-            if (playersCount == 1)
-            {
-                _rpsRoundController.StopGame(true);
-                _menuLevel_UI_Manager.ShowWaitingForPlayer();
-                return;
-            }
-
+        private void StartGameCompetitionForTwoPlayers()
+        {
             PlayerRef localPlayer = _fusionNetworkService.LocalPlayer;
             PlayerRef opponentPlayer = FindOpponent(localPlayer);
 
-            _prepareGameCoroutine = StartCoroutine(PrepareGame(localPlayer, opponentPlayer));
+            StartCoroutine(WaitForPlayerEntitiesAndStartGame(localPlayer, opponentPlayer));
         }
 
         private PlayerRef FindOpponent(PlayerRef localPlayer)
@@ -89,7 +115,7 @@ namespace MyProject
             return PlayerRef.None;
         }
 
-        private IEnumerator PrepareGame(PlayerRef localPlayer, PlayerRef opponentPlayer)
+        private IEnumerator WaitForPlayerEntitiesAndStartGame(PlayerRef localPlayer, PlayerRef opponentPlayer)
         {
             NetworkPlayerEntity localPlayerEntity = null;
             NetworkPlayerEntity opponentPlayerEntity = null;
@@ -103,31 +129,7 @@ namespace MyProject
             }
 
             _rpsRoundController.StartGame(localPlayerEntity, opponentPlayerEntity, localPlayer.PlayerId, opponentPlayer.PlayerId);
-
-            _prepareGameCoroutine = null;
-        }
-
-        private void StopPreparingGame()
-        {
-            if (_prepareGameCoroutine == null)
-                return;
-
-            StopCoroutine(_prepareGameCoroutine);
-            _prepareGameCoroutine = null;
-        }
-
-        private void OnDestroy()
-        {
-            StopPreparingGame();
-            _rpsRoundController.StopGame(false);
-
-            _menuLevel_UI_Manager.OnPlayPressed -= AfterPlayPressed;
-
-            if (_fusionNetworkService != null)
-            {
-                _fusionNetworkService.PlayersChanged -= RefreshPlayers;
-                _fusionNetworkService.UnregisterGlobal(_networkPlayerSpawner);
-            }
+            _gameCompetitionStarted = true;
         }
     }
 }

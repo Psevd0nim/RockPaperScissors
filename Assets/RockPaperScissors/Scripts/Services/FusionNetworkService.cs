@@ -18,7 +18,7 @@ namespace MyProject
 
         private NetworkRunner _runner;
 
-        public async Task<StartGameResult> StartGameAsync()
+        public async Task<StartGameResult> StartGameSessionAsync()
         {
             GameObject runnerObject = new GameObject("NetworkRunner");
             _runner = runnerObject.AddComponent<NetworkRunner>();
@@ -44,14 +44,6 @@ namespace MyProject
 
             _runner.AddGlobal(simulationBehaviour);
             return true;
-        }
-
-        public void UnregisterGlobal(SimulationBehaviour simulationBehaviour)
-        {
-            if (_runner == null || _runner.IsRunning == false)
-                return;
-
-            _runner.RemoveGlobal(simulationBehaviour);
         }
 
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)

@@ -20,48 +20,44 @@ namespace MyProject
 
     public class NetworkPlayerEntity : NetworkBehaviour
     {
-        public event Action EntityChanged;
+        public event Action ChoiceChanged;
+        public event Action ScoreChanged;
 
-        public bool CanSelectChoice => HasStateAuthority && Choice == RpsChoice.None;
-
-        [Networked, OnChangedRender(nameof(NotifyEntityChanged))]
+        [Networked, OnChangedRender(nameof(NotifyChoiceChanged))]
         public RpsChoice Choice { get; set; }
 
-        [Networked, OnChangedRender(nameof(NotifyEntityChanged))]
+        [Networked, OnChangedRender(nameof(NotifyScoreChanged))]
         public int Score { get; set; }
 
         public void SelectChoice(RpsChoice choice)
         {
-            if (CanSelectChoice == false || choice == RpsChoice.None)
-                return;
-
             Choice = choice;
         }
 
         public void AddPoint()
         {
-            if (HasStateAuthority)
-                Score++;
+            Score++;
         }
 
         public void ResetChoice()
         {
-            if (HasStateAuthority)
-                Choice = RpsChoice.None;
+            Choice = RpsChoice.None;
         }
 
-        public void ResetMatch()
+        public void Reset()
         {
-            if (HasStateAuthority == false)
-                return;
-
             Choice = RpsChoice.None;
             Score = 0;
         }
 
-        private void NotifyEntityChanged()
+        private void NotifyChoiceChanged()
         {
-            EntityChanged?.Invoke();
+            ChoiceChanged?.Invoke();
+        }
+
+        private void NotifyScoreChanged()
+        {
+            ScoreChanged?.Invoke();
         }
     }
 }

@@ -33,10 +33,10 @@ namespace MyProject
         private void Start()
         {
             Application.targetFrameRate = 144;
-            LoadGame();
+            StartLoadGame();
         }
 
-        private void LoadGame()
+        private void StartLoadGame()
         {
             string targetSceneName = Constants.MenuSceneName;
             if (_startWithCurrentScene)
