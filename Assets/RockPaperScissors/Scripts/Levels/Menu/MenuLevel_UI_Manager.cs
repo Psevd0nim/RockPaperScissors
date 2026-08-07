@@ -1,36 +1,41 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MyProject
 {
     public class MenuLevel_UI_Manager : UI_Manager
     {
-        public event Action<string> ConnectRequested;
-        public event Action DisconnectRequested;
-
         public event Action OnPlayPressed;
+        public event Action<RpsChoice> ChoiceSelected;
 
         [SerializeField] private Button_UI _playButton;
+        [SerializeField] private TMP_Text _countPlayersText;
+        [SerializeField] private TMP_Text _waitingForPlayerText;
+        [SerializeField] private GameObject _gameUIRoot;
+        [SerializeField] private TMP_Text _localPlayerText;
+        [SerializeField] private TMP_Text _opponentPlayerText;
+        [SerializeField] private Button_UI _rockButton;
+        [SerializeField] private Button_UI _paperButton;
+        [SerializeField] private Button_UI _scissorsButton;
+        [SerializeField] private Image _localChoiceImage;
+        [SerializeField] private Image _opponentChoiceImage;
+        [SerializeField] private TMP_Text _roundResultText;
+        [SerializeField] private Sprite _rockSprite;
+        [SerializeField] private Sprite _paperSprite;
+        [SerializeField] private Sprite _scissorsSprite;
 
-        [Header("Network")]
-        [SerializeField] private TMP_InputField _sessionNameInput;
-        [SerializeField] private TMP_Text _connectionStatusText;
-        [SerializeField] private TMP_Text _playersText;
-        [SerializeField] private Button_UI _connectButton;
-        [SerializeField] private Button_UI _disconnectButton;
+        private int _localPlayerId;
+        private int _opponentPlayerId;
 
         public override void Init(AudioManager audioManager)
         {
             base.Init(audioManager);
-
-            if (_connectButton != null)
-                _connectButton.OnPressed += RequestConnect;
-
-            if (_disconnectButton != null)
-                _disconnectButton.OnPressed += RequestDisconnect;
-
             _playButton.OnPressed += AfterPlayButtonPressed;
+            _rockButton.OnPressed += AfterRockButtonPressed;
+            _paperButton.OnPressed += AfterPaperButtonPressed;
+            _scissorsButton.OnPressed += AfterScissorsButtonPressed;
         }
 
         private void AfterPlayButtonPressed()
@@ -38,36 +43,124 @@ namespace MyProject
             OnPlayPressed?.Invoke();
         }
 
-        public void ShowConnectionStatus(string status)
+        private void AfterRockButtonPressed()
         {
-            if (_connectionStatusText != null)
-                _connectionStatusText.text = status;
+            ChoiceSelected?.Invoke(RpsChoice.Rock);
         }
 
-        public void ShowPlayers(string players)
+        private void AfterPaperButtonPressed()
         {
-            if (_playersText != null)
-                _playersText.text = players;
+            ChoiceSelected?.Invoke(RpsChoice.Paper);
         }
 
-        private void RequestConnect()
+        private void AfterScissorsButtonPressed()
         {
-            string sessionName = _sessionNameInput == null ? "rps-room" : _sessionNameInput.text;
-            ConnectRequested?.Invoke(sessionName);
+            ChoiceSelected?.Invoke(RpsChoice.Scissors);
         }
 
-        private void RequestDisconnect()
+        public void ShowPlayersCount(int playersCount)
         {
-            DisconnectRequested?.Invoke();
+            _countPlayersText.text = $"Players: {playersCount}";
+        }
+
+        public void HidePlayers()
+        {
+            _waitingForPlayerText.gameObject.SetActive(false);
+            _gameUIRoot.SetActive(false);
+        }
+
+        public void ShowWaitingForPlayer()
+        {
+            _waitingForPlayerText.gameObject.SetActive(true);
+            _gameUIRoot.SetActive(false);
+        }
+
+        public void ShowGame(int localPlayerId, int opponentPlayerId)
+        {
+            _localPlayerId = localPlayerId;
+            _opponentPlayerId = opponentPlayerId;
+
+            _waitingForPlayerText.gameObject.SetActive(false);
+            _gameUIRoot.SetActive(true);
+
+            _localPlayerText.text = $"YOU\nPlayer {localPlayerId}\nScore: 0";
+            _opponentPlayerText.text = $"OPPONENT\nPlayer {opponentPlayerId}\nScore: 0";
+
+            ShowChoiceButtons();
+            _localChoiceImage.gameObject.SetActive(false);
+            _opponentChoiceImage.gameObject.SetActive(false);
+            _roundResultText.gameObject.SetActive(false);
+        }
+
+        public void ShowLocalChoice(RpsChoice choice)
+        {
+            _localChoiceImage.sprite = GetChoiceSprite(choice);
+            _localChoiceImage.gameObject.SetActive(true);
+
+            _rockButton.gameObject.SetActive(false);
+            _paperButton.gameObject.SetActive(false);
+            _scissorsButton.gameObject.SetActive(false);
+        }
+
+        public void ShowRound(RpsChoice localChoice, RpsChoice opponentChoice, RpsRoundResult result)
+        {
+            _localChoiceImage.sprite = GetChoiceSprite(localChoice);
+            _localChoiceImage.gameObject.SetActive(true);
+
+            _opponentChoiceImage.sprite = GetChoiceSprite(opponentChoice);
+            _opponentChoiceImage.gameObject.SetActive(true);
+
+            _roundResultText.text = result.ToString();
+            _roundResultText.gameObject.SetActive(true);
+        }
+
+        public void UpdateScores(int localScore, int opponentScore)
+        {
+            _localPlayerText.text = $"YOU\nPlayer {_localPlayerId}\nScore: {localScore}";
+            _opponentPlayerText.text = $"OPPONENT\nPlayer {_opponentPlayerId}\nScore: {opponentScore}";
+        }
+
+        public void PrepareNextRound()
+        {
+            _localChoiceImage.gameObject.SetActive(false);
+            _opponentChoiceImage.gameObject.SetActive(false);
+            _roundResultText.gameObject.SetActive(false);
+            ShowChoiceButtons();
+        }
+
+        private void ShowChoiceButtons()
+        {
+            _rockButton.gameObject.SetActive(true);
+            _paperButton.gameObject.SetActive(true);
+            _scissorsButton.gameObject.SetActive(true);
+        }
+
+        private Sprite GetChoiceSprite(RpsChoice choice)
+        {
+            switch (choice)
+            {
+                case RpsChoice.Rock:
+                    return _rockSprite;
+                case RpsChoice.Paper:
+                    return _paperSprite;
+                case RpsChoice.Scissors:
+                    return _scissorsSprite;
+                default:
+                    return null;
+            }
+        }
+
+        public void HidePlayButton()
+        {
+            _playButton.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            if (_connectButton != null)
-                _connectButton.OnPressed -= RequestConnect;
-
-            if (_disconnectButton != null)
-                _disconnectButton.OnPressed -= RequestDisconnect;
+            _playButton.OnPressed -= AfterPlayButtonPressed;
+            _rockButton.OnPressed -= AfterRockButtonPressed;
+            _paperButton.OnPressed -= AfterPaperButtonPressed;
+            _scissorsButton.OnPressed -= AfterScissorsButtonPressed;
         }
     }
 }

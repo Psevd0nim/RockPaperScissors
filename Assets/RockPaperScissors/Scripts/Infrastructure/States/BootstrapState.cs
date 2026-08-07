@@ -30,14 +30,7 @@ namespace MyProject
             GameData gameData = saveAndLoadData.LoadGameData();
             FusionNetworkService networkService = new FusionNetworkService();
 
-            return new AppServices(
-                sceneLoader,
-                inputService,
-                gameFactory,
-                saveAndLoadData,
-                gameData,
-                _audioManager,
-                networkService);
+            return new AppServices(sceneLoader, inputService, gameFactory, saveAndLoadData, gameData, _audioManager, networkService);
         }
 
         public void Exit()

@@ -9,6 +9,7 @@ namespace MyProject
         private GameStateMachine _gameStateMachine;
 
         [SerializeField] private AudioManager _audioManager;
+        [SerializeField] private bool _startWithCurrentScene;
 
         private void Awake()
         {
@@ -19,7 +20,12 @@ namespace MyProject
             }
             _instance = this;
             DontDestroyOnLoad(gameObject);
+            
+            CreateInfrastructure();
+        }
 
+        private void CreateInfrastructure()
+        {
             _gameStateMachine = new GameStateMachine(this, _audioManager);
             _gameStateMachine.Enter<BootstrapState>();
         }
@@ -27,13 +33,18 @@ namespace MyProject
         private void Start()
         {
             Application.targetFrameRate = 144;
+            LoadGame();
+        }
 
+        private void LoadGame()
+        {
             string targetSceneName = Constants.MenuSceneName;
-            
-            #if UNITY_EDITOR
+            if (_startWithCurrentScene)
+            {
+#if UNITY_EDITOR
                 targetSceneName = SceneManager.GetActiveScene().name;
-            #endif
-
+#endif
+            }
             _gameStateMachine.Enter<LoadLevelState, string, float>(targetSceneName, 0f);
         }
     }
