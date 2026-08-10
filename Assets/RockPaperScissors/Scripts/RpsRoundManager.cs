@@ -3,20 +3,25 @@ using UnityEngine;
 
 namespace MyProject
 {
-    public class RpsRoundController : MonoBehaviour
+    public class RpsRoundManager : MonoBehaviour
     {
-        private MenuLevel_UI_Manager _menuUI;
+        public bool IsMatchActive => _localPlayerEntity != null;
+
+        private Game_UI_Manager _gameUI;
         private NetworkPlayerEntity _localPlayerEntity;
         private NetworkPlayerEntity _opponentPlayerEntity;
 
-        public void Init(MenuLevel_UI_Manager menuUI)
+        public void Init(Game_UI_Manager gameUI)
         {
-            _menuUI = menuUI;
-            _menuUI.ChoiceSelected += SelectChoice;
+            _gameUI = gameUI;
+            _gameUI.ChoiceSelected += SelectChoice;
         }
 
-        public void StartGame(NetworkPlayerEntity localPlayerEntity, NetworkPlayerEntity opponentPlayerEntity, int localPlayerId, int opponentPlayerId)
+        public void StartMatch(NetworkPlayerEntity localPlayerEntity, NetworkPlayerEntity opponentPlayerEntity, int localPlayerId, int opponentPlayerId)
         {
+            if (IsMatchActive)
+                return;
+
             _localPlayerEntity = localPlayerEntity;
             _opponentPlayerEntity = opponentPlayerEntity;
 
@@ -25,14 +30,13 @@ namespace MyProject
             _localPlayerEntity.ScoreChanged += UpdateScores;
             _opponentPlayerEntity.ScoreChanged += UpdateScores;
 
-            _menuUI.ShowGame(localPlayerId, opponentPlayerId);
+            _gameUI.ShowGame(localPlayerId, opponentPlayerId);
             UpdateScores();
         }
 
-        public void ResetGame()
+        public void EndMatch()
         {
-            //При каком условии эта проверка может сработать? В рамках текущего кода
-            if (_localPlayerEntity == null)
+            if (IsMatchActive == false)
                 return;
 
             StopAllCoroutines();
@@ -52,21 +56,24 @@ namespace MyProject
             _opponentPlayerEntity = null;
         }
 
-        private void SelectChoice(RpsChoice choice)
+        private void SelectChoice(RPSElementType elementType)
         {
-            _localPlayerEntity.SelectChoice(choice);
-            _menuUI.ShowLocalChoice(choice);
+            if (IsMatchActive == false)
+                return;
+
+            _localPlayerEntity.SelectChoice(elementType);
+            _gameUI.ShowLocalChoice(elementType);
         }
 
         private void PlayerChoiceChanged()
         {
-            bool bothPlayersSelected = _localPlayerEntity.Choice != RpsChoice.None && _opponentPlayerEntity.Choice != RpsChoice.None;
-            bool bothChoicesAreReset = _localPlayerEntity.Choice == RpsChoice.None && _opponentPlayerEntity.Choice == RpsChoice.None;
+            bool bothPlayersSelected = _localPlayerEntity.Choice != RPSElementType.None && _opponentPlayerEntity.Choice != RPSElementType.None;
+            bool bothChoicesAreReset = _localPlayerEntity.Choice == RPSElementType.None && _opponentPlayerEntity.Choice == RPSElementType.None;
 
             if (bothPlayersSelected)
                 StartCoroutine(ShowRoundResult());
             else if (bothChoicesAreReset)
-                _menuUI.PrepareNextRound();
+                _gameUI.PrepareNextRound();
         }
 
         private IEnumerator ShowRoundResult()
@@ -76,7 +83,7 @@ namespace MyProject
             if (result == RpsRoundResult.Win)
                 _localPlayerEntity.AddPoint();
 
-            _menuUI.ShowRound(_localPlayerEntity.Choice, _opponentPlayerEntity.Choice, result);
+            _gameUI.ShowRound(_localPlayerEntity.Choice, _opponentPlayerEntity.Choice, result);
 
             yield return new WaitForSeconds(2f);
 
@@ -85,20 +92,26 @@ namespace MyProject
 
         private void UpdateScores()
         {
-            _menuUI.UpdateScores(_localPlayerEntity.Score, _opponentPlayerEntity.Score);
+            _gameUI.UpdateScores(_localPlayerEntity.Score, _opponentPlayerEntity.Score);
         }
 
-        private RpsRoundResult GetRoundResult(RpsChoice localChoice, RpsChoice opponentChoice)
+        private RpsRoundResult GetRoundResult(RPSElementType localElement, RPSElementType opponentElement)
         {
-            if (localChoice == opponentChoice)
+            if (localElement == opponentElement)
                 return RpsRoundResult.Draw;
 
             bool localPlayerWon =
-                localChoice == RpsChoice.Rock && opponentChoice == RpsChoice.Scissors
-                || localChoice == RpsChoice.Paper && opponentChoice == RpsChoice.Rock
-                || localChoice == RpsChoice.Scissors && opponentChoice == RpsChoice.Paper;
+                localElement == RPSElementType.Rock && opponentElement == RPSElementType.Scissors
+                || localElement == RPSElementType.Paper && opponentElement == RPSElementType.Rock
+                || localElement == RPSElementType.Scissors && opponentElement == RPSElementType.Paper;
 
             return localPlayerWon ? RpsRoundResult.Win : RpsRoundResult.Lose;
+        }
+
+        private void OnDestroy()
+        {
+            if (_gameUI != null)
+                _gameUI.ChoiceSelected -= SelectChoice;
         }
     }
 }

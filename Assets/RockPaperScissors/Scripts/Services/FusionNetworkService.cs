@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace MyProject
 {
@@ -24,11 +25,16 @@ namespace MyProject
             _runner = runnerObject.AddComponent<NetworkRunner>();
             _runner.AddCallbacks(this);
 
+            SceneRef activeScene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
+            NetworkSceneInfo sceneInfo = new NetworkSceneInfo();
+            sceneInfo.AddSceneRef(activeScene);
+
             StartGameArgs args = new StartGameArgs
             {
                 GameMode = GameMode.Shared,
                 SessionName = "Test Room",
-                PlayerCount = 2
+                PlayerCount = 2,
+                Scene = sceneInfo
             };
 
             Task<StartGameResult> operation = _runner.StartGame(args);
@@ -37,13 +43,14 @@ namespace MyProject
             return startGameResult;
         }
 
-        public bool RegisterGlobal(SimulationBehaviour simulationBehaviour)
+        public bool TryGetNetworkPlayerEntity(PlayerRef player, out NetworkPlayerEntity playerEntity)
         {
-            if (_runner == null || _runner.IsRunning == false)
+            playerEntity = null;
+
+            if (_runner.TryGetPlayerObject(player, out NetworkObject playerObject) == false)
                 return false;
 
-            _runner.AddGlobal(simulationBehaviour);
-            return true;
+            return playerObject.TryGetComponent(out playerEntity);
         }
 
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)

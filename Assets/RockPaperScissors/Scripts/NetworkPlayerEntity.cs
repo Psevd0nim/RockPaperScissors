@@ -3,14 +3,6 @@ using Fusion;
 
 namespace MyProject
 {
-    public enum RpsChoice : byte
-    {
-        None,
-        Rock,
-        Paper,
-        Scissors
-    }
-
     public enum RpsRoundResult : byte
     {
         Win,
@@ -24,14 +16,14 @@ namespace MyProject
         public event Action ScoreChanged;
 
         [Networked, OnChangedRender(nameof(NotifyChoiceChanged))]
-        public RpsChoice Choice { get; set; }
+        public RPSElementType Choice { get; set; }
 
         [Networked, OnChangedRender(nameof(NotifyScoreChanged))]
         public int Score { get; set; }
 
-        public void SelectChoice(RpsChoice choice)
+        public void SelectChoice(RPSElementType elementType)
         {
-            Choice = choice;
+            Choice = elementType;
         }
 
         public void AddPoint()
@@ -41,12 +33,12 @@ namespace MyProject
 
         public void ResetChoice()
         {
-            Choice = RpsChoice.None;
+            Choice = RPSElementType.None;
         }
 
         public void Reset()
         {
-            Choice = RpsChoice.None;
+            Choice = RPSElementType.None;
             Score = 0;
         }
 

@@ -125,9 +125,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5190255762884450426}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86e4426816940014c9edea54ef66e7b6, type: 3}
+  m_Script: {fileID: 11500000, guid: f59b584f5a9258c4bb4c0e947bec0dc1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SkillsArena.Button_UI
+  m_EditorClassIdentifier: Assembly-CSharp::MyProject.RPSButton_UI
+  _elementType: 1
+  _view: {fileID: 5037631196463797253}
 --- !u!114 &1461738850338966825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,7 +189,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7856883632900159548}
-        m_TargetAssemblyTypeName: SkillsArena.Button_UI, Assembly-CSharp
+        m_TargetAssemblyTypeName: MyProject.RPSButton_UI, Assembly-CSharp
         m_MethodName: Pressed
         m_Mode: 1
         m_Arguments:
