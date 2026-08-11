@@ -5,11 +5,20 @@ using UnityEngine;
 
 namespace MyProject
 {
+    public enum NetworkGameState
+    {
+        NotStarted,
+        Connecting,
+        WaitingForOpponent,
+        ReadyToPlay,
+        ConnectionFailed
+    }
+
     public class NetworkGameManager : NetworkBehaviour
     {
         public event Action<NetworkGameState> StateChanged;
 
-        public NetworkGameState State { get; private set; } = NetworkGameState.Idle;
+        public NetworkGameState State { get; private set; } = NetworkGameState.NotStarted;
         public NetworkPlayerEntity LocalPlayerEntity { get; private set; }
         public NetworkPlayerEntity OpponentPlayerEntity { get; private set; }
         public int PlayersCount => _networkService?.Players.Count ?? 0;
@@ -17,13 +26,11 @@ namespace MyProject
         [SerializeField] private NetworkPlayerEntity _playerEntityPrefab;
 
         private FusionNetworkService _networkService;
-        private NetworkRunner _runner;
-        private Coroutine _waitForPlayerEntitiesCoroutine;
-        private bool _isSpawned;
 
         public void Init(FusionNetworkService networkService)
         {
             _networkService = networkService;
+            _networkService.PlayersChanged += TotalPlayersChanged;
         }
 
         public async void StartNetworkSession()
@@ -41,85 +48,37 @@ namespace MyProject
                 ChangeState(NetworkGameState.ConnectionFailed);
                 return;
             }
-
-            CompleteConnection();
         }
 
         public override void Spawned()
         {
-            _runner = Runner;
-
             NetworkPlayerEntity localPlayerEntity = Runner.Spawn(_playerEntityPrefab);
             Runner.SetPlayerObject(Runner.LocalPlayer, localPlayerEntity.Object);
 
             LocalPlayerEntity = localPlayerEntity;
-            _isSpawned = true;
 
-            NetworkGameState previousState = State;
-            OnPlayersChanged();
-
-            if (State == NetworkGameState.WaitingForOpponent && previousState == State)
-                StateChanged?.Invoke(State);
+            TotalPlayersChanged();
         }
 
-        private void CompleteConnection()
-        {
-            _networkService.PlayersChanged += OnPlayersChanged;
-            OnPlayersChanged();
-        }
-
-        private void OnPlayersChanged()
+        private void TotalPlayersChanged()
         {
             if (_networkService.Players.Count < 2)
             {
-                CancelPlayerPreparation();
                 OpponentPlayerEntity = null;
                 ChangeState(NetworkGameState.WaitingForOpponent);
                 return;
             }
 
-            TryStartPlayerPreparation();
-        }
-
-        private void TryStartPlayerPreparation()
-        {
-            if (_isSpawned == false || _waitForPlayerEntitiesCoroutine != null)
-                return;
-
-            ChangeState(NetworkGameState.PreparingPlayers);
-            _waitForPlayerEntitiesCoroutine = _runner.StartCoroutine(WaitForPlayerEntities());
-        }
-
-        private IEnumerator WaitForPlayerEntities()
-        {
-            yield return null;
-
-            PlayerRef localPlayer = _networkService.LocalPlayer;
-            PlayerRef opponentPlayer = FindOpponent(localPlayer);
-
-            while (opponentPlayer != PlayerRef.None)
+            PlayerRef opponentPlayer = FindOpponent(Runner.LocalPlayer);
+            if (_networkService.TryGetNetworkPlayerEntity(opponentPlayer, out NetworkPlayerEntity opponentPlayerEntity))
             {
-                bool localPlayerFound = _networkService.TryGetNetworkPlayerEntity(
-                    localPlayer,
-                    out NetworkPlayerEntity localPlayerEntity);
-                bool opponentPlayerFound = _networkService.TryGetNetworkPlayerEntity(
-                    opponentPlayer,
-                    out NetworkPlayerEntity opponentPlayerEntity);
-
-                if (localPlayerFound && opponentPlayerFound)
-                {
-                    LocalPlayerEntity = localPlayerEntity;
-                    OpponentPlayerEntity = opponentPlayerEntity;
-                    _waitForPlayerEntitiesCoroutine = null;
-                    ChangeState(NetworkGameState.ReadyToPlay);
-                    yield break;
-                }
-
-                yield return null;
-                opponentPlayer = FindOpponent(localPlayer);
+                OpponentPlayerEntity = opponentPlayerEntity;
+                ChangeState(NetworkGameState.ReadyToPlay);
             }
-
-            _waitForPlayerEntitiesCoroutine = null;
+            else
+            {
+                Debug.Log("OpponentPlayerRef connected but no NetworkPlayerEntity found for it.");
+            }
         }
 
         private PlayerRef FindOpponent(PlayerRef localPlayer)
@@ -133,19 +92,10 @@ namespace MyProject
             return PlayerRef.None;
         }
 
-        private void CancelPlayerPreparation()
-        {
-            if (_waitForPlayerEntitiesCoroutine == null)
-                return;
-
-            _runner.StopCoroutine(_waitForPlayerEntitiesCoroutine);
-            _waitForPlayerEntitiesCoroutine = null;
-        }
-
         private void ChangeState(NetworkGameState state)
         {
-            if (State == state)
-                return;
+            /*if (State == state)
+                return;*/
 
             State = state;
             StateChanged?.Invoke(State);
@@ -153,11 +103,8 @@ namespace MyProject
 
         private void OnDestroy()
         {
-            if (_runner != null)
-                CancelPlayerPreparation();
-
             if (_networkService != null)
-                _networkService.PlayersChanged -= OnPlayersChanged;
+                _networkService.PlayersChanged -= TotalPlayersChanged;
         }
     }
 }

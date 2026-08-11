@@ -41,13 +41,6 @@ namespace MyProject
                     //отдельно указываем информацию свою, отдельно информацию оппонента, чтобы не было путаницы
                     _gameUIManager.ShowWaitingForOpponent(_networkGameManager.LocalPlayerEntity?.Nickname);
                     break;
-                    //точно ли мне нужна эта стадия?
-                case NetworkGameState.PreparingPlayers:
-                    _gameUIManager.HideConnectingIndicator();
-                    _gameUIManager.ShowPreparingPlayers(
-                        _networkGameManager.LocalPlayerEntity?.Nickname,
-                        _networkGameManager.OpponentPlayerEntity?.Nickname);
-                    break;
                 case NetworkGameState.ReadyToPlay:
                     _gameUIManager.HideConnectingIndicator();
                     _rpsRoundManager.StartMatch(
