@@ -17,7 +17,7 @@ namespace MyProject
             _gameUI.ChoiceSelected += SelectChoice;
         }
 
-        public void StartMatch(NetworkPlayerEntity localPlayerEntity, NetworkPlayerEntity opponentPlayerEntity, int localPlayerId, int opponentPlayerId)
+        public void StartMatch(NetworkPlayerEntity localPlayerEntity, NetworkPlayerEntity opponentPlayerEntity)
         {
             if (IsMatchActive)
                 return;
@@ -30,7 +30,7 @@ namespace MyProject
             _localPlayerEntity.ScoreChanged += UpdateScores;
             _opponentPlayerEntity.ScoreChanged += UpdateScores;
 
-            _gameUI.ShowGame(localPlayerId, opponentPlayerId);
+            _gameUI.ShowGame(localPlayerEntity.Nickname, opponentPlayerEntity.Nickname);
             UpdateScores();
         }
 

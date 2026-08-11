@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,8 +6,6 @@ namespace MyProject
 {
     public class PlayerName : MonoBehaviour
     {
-        public event Action Test;
-
         public TMP_InputField inputField;
         public Image view;
 

@@ -55,9 +55,10 @@ namespace MyProject
 
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
         {
-            if (_players.Contains(player) == false)
-                _players.Add(player);
+            if (_players.Contains(player))
+                return;
 
+            _players.Add(player);
             PlayersChanged?.Invoke();
 
             Debug.Log($"OnPlayerJoined: {player}");

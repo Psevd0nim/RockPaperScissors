@@ -18,8 +18,8 @@ namespace MyProject
         [SerializeField] private Image _opponentChoiceImage;
         [SerializeField] private TextMeshProUGUI _roundResultText;
 
-        private int _localPlayerId;
-        private int _opponentPlayerId;
+        private string _localPlayerName;
+        private string _opponentPlayerName;
 
         public void Init()
         {
@@ -30,15 +30,36 @@ namespace MyProject
             }
         }
 
-        public void Show(int localPlayerId, int opponentPlayerId)
+        public void ShowWaitingForOpponent(string localPlayerName)
         {
-            _localPlayerId = localPlayerId;
-            _opponentPlayerId = opponentPlayerId;
+            _localPlayerName = GetDisplayedName(localPlayerName);
+            _opponentPlayerName = null;
 
             gameObject.SetActive(true);
+            _localPlayerText.text = $"YOU\n{_localPlayerName}\nScore: 0";
+            _opponentPlayerText.text = "OPPONENT\nWaiting for opponent...";
+            HideRoundControls();
+        }
 
-            _localPlayerText.text = $"YOU\nPlayer {localPlayerId}\nScore: 0";
-            _opponentPlayerText.text = $"OPPONENT\nPlayer {opponentPlayerId}\nScore: 0";
+        public void ShowPreparingPlayers(string localPlayerName, string opponentPlayerName)
+        {
+            _localPlayerName = GetDisplayedName(localPlayerName);
+            _opponentPlayerName = GetDisplayedName(opponentPlayerName);
+
+            gameObject.SetActive(true);
+            _localPlayerText.text = $"YOU\n{_localPlayerName}\nScore: 0";
+            _opponentPlayerText.text = $"OPPONENT\n{_opponentPlayerName}\nPreparing...";
+            HideRoundControls();
+        }
+
+        public void Show(string localPlayerName, string opponentPlayerName)
+        {
+            _localPlayerName = GetDisplayedName(localPlayerName);
+            _opponentPlayerName = GetDisplayedName(opponentPlayerName);
+
+            gameObject.SetActive(true);
+            _localPlayerText.text = $"YOU\n{_localPlayerName}\nScore: 0";
+            _opponentPlayerText.text = $"OPPONENT\n{_opponentPlayerName}\nScore: 0";
 
             PrepareNextRound();
         }
@@ -65,8 +86,8 @@ namespace MyProject
 
         public void UpdateScores(int localScore, int opponentScore)
         {
-            _localPlayerText.text = $"YOU\nPlayer {_localPlayerId}\nScore: {localScore}";
-            _opponentPlayerText.text = $"OPPONENT\nPlayer {_opponentPlayerId}\nScore: {opponentScore}";
+            _localPlayerText.text = $"YOU\n{_localPlayerName}\nScore: {localScore}";
+            _opponentPlayerText.text = $"OPPONENT\n{_opponentPlayerName}\nScore: {opponentScore}";
         }
 
         public void PrepareNextRound()
@@ -92,6 +113,19 @@ namespace MyProject
         {
             foreach (RPSButton_UI choiceButton in _choiceButtons)
                 choiceButton.gameObject.SetActive(isActive);
+        }
+
+        private void HideRoundControls()
+        {
+            _localChoiceImage.gameObject.SetActive(false);
+            _opponentChoiceImage.gameObject.SetActive(false);
+            _roundResultText.gameObject.SetActive(false);
+            SetChoiceButtonsActive(false);
+        }
+
+        private string GetDisplayedName(string playerName)
+        {
+            return string.IsNullOrWhiteSpace(playerName) ? "Player" : playerName;
         }
 
         private void OnDestroy()

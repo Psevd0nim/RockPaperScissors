@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 147777248}
   - component: {fileID: 147777247}
   m_Layer: 5
-  m_Name: WaitingForPlayerText
+  m_Name: StatusText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -176,7 +176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Waiting for another player...
+  m_text: Waiting for opponent...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 57c5e938ebdc7674fabf2b3490edad83, type: 2}
   m_sharedMaterial: {fileID: -5996497574426858040, guid: 57c5e938ebdc7674fabf2b3490edad83, type: 2}
@@ -1045,7 +1045,7 @@ MonoBehaviour:
   _transition_UI: {fileID: 1945656932}
   _connectingIndicator: {fileID: 375377813}
   _countPlayersText: {fileID: 1413583326}
-  _waitingForPlayerText: {fileID: 147777247}
+  _statusText: {fileID: 147777247}
   _rpsRoundInfoUI: {fileID: 2100000003}
 --- !u!1 &1349386391
 GameObject:

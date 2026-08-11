@@ -1,5 +1,6 @@
 using System;
 using Fusion;
+using UnityEngine;
 
 namespace MyProject
 {
@@ -20,6 +21,17 @@ namespace MyProject
 
         [Networked, OnChangedRender(nameof(NotifyScoreChanged))]
         public int Score { get; set; }
+
+        [Networked]
+        public string Nickname { get; set; }
+
+        public override void Spawned()
+        {
+            if (HasStateAuthority == false)
+                return;
+
+            Nickname = PlayerPrefs.GetString("PlayerName", "Player123");
+        }
 
         public void SelectChoice(RPSElementType elementType)
         {

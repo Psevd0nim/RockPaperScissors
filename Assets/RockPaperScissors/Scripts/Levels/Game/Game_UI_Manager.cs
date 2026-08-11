@@ -10,7 +10,7 @@ namespace MyProject
 
         [SerializeField] private ConnectingIndicator _connectingIndicator;
         [SerializeField] private TextMeshProUGUI _countPlayersText;
-        [SerializeField] private TextMeshProUGUI _waitingForPlayerText;
+        [SerializeField] private TextMeshProUGUI _statusText;
         [SerializeField] private RPSRoundInfo_UI _rpsRoundInfoUI;
 
         public override void Init(AudioManager audioManager)
@@ -35,24 +35,29 @@ namespace MyProject
             _connectingIndicator.Hide();
         }
 
-        public void ShowWaitingForOpponent()
+        public void ShowWaitingForOpponent(string localPlayerName)
         {
-            _waitingForPlayerText.text = "Waiting for opponent...";
-            _waitingForPlayerText.gameObject.SetActive(true);
-            _rpsRoundInfoUI.Hide();
+            _statusText.gameObject.SetActive(false);
+            _rpsRoundInfoUI.ShowWaitingForOpponent(localPlayerName);
+        }
+
+        public void ShowPreparingPlayers(string localPlayerName, string opponentPlayerName)
+        {
+            _statusText.gameObject.SetActive(false);
+            _rpsRoundInfoUI.ShowPreparingPlayers(localPlayerName, opponentPlayerName);
         }
 
         public void ShowConnectionFailed()
         {
-            _waitingForPlayerText.text = "Connection failed";
-            _waitingForPlayerText.gameObject.SetActive(true);
+            _statusText.text = "Connection failed";
+            _statusText.gameObject.SetActive(true);
             _rpsRoundInfoUI.Hide();
         }
 
-        public void ShowGame(int localPlayerId, int opponentPlayerId)
+        public void ShowGame(string localPlayerName, string opponentPlayerName)
         {
-            _waitingForPlayerText.gameObject.SetActive(false);
-            _rpsRoundInfoUI.Show(localPlayerId, opponentPlayerId);
+            _statusText.gameObject.SetActive(false);
+            _rpsRoundInfoUI.Show(localPlayerName, opponentPlayerName);
         }
 
         public void ShowLocalChoice(RPSElementType elementType)

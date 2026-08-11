@@ -5,6 +5,7 @@ namespace MyProject
         Idle,
         Connecting,
         WaitingForOpponent,
+        PreparingPlayers,
         ReadyToPlay,
         ConnectionFailed
     }
