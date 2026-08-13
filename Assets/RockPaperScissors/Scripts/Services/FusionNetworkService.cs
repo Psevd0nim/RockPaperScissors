@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
+using MyProject;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +19,13 @@ namespace MyProject
         private readonly List<PlayerRef> _players = new List<PlayerRef>();
 
         private NetworkRunner _runner;
+        private PlayerRegistry _playerRegistry;
+
+        public FusionNetworkService()
+        {
+            _playerRegistry = PlayerRegistry.Instance;
+            _playerRegistry.OnPlayerEntitiesChanged += AfterTotalPlayerEntitiesChanged;
+        }
 
         public async Task<StartGameResult> StartGameSessionAsync()
         {
@@ -72,7 +80,12 @@ namespace MyProject
             Debug.Log($"OnPlayerLeft: {player}");
         }
 
-#region UnrealisedCallbacks
+        private void AfterTotalPlayerEntitiesChanged()
+        {
+            PlayersChanged?.Invoke();
+        }
+
+        #region UnusedCallbacks
         public void OnConnectedToServer(NetworkRunner runner)
         {
         }
@@ -137,6 +150,32 @@ namespace MyProject
         {
         }
 
-#endregion
+        #endregion
+    }
+
+    public class PlayerRegistry
+    {
+        public event Action OnPlayerEntitiesChanged;
+
+        public static PlayerRegistry Instance => _instance ?? (_instance = new PlayerRegistry());
+
+        public List<NetworkPlayerEntity> PlayerEntities => _playerEntities;
+
+        private static PlayerRegistry _instance;
+        private readonly List<NetworkPlayerEntity> _playerEntities = new List<NetworkPlayerEntity>();
+
+        private PlayerRegistry()
+        {
+
+        }
+
+        public void AddPlayerEntity(NetworkPlayerEntity playerEntity)
+        {
+            if (_playerEntities.Contains(playerEntity))
+                return;
+
+            _playerEntities.Add(playerEntity);
+            OnPlayerEntitiesChanged?.Invoke();
+        }
     }
 }

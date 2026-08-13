@@ -27,10 +27,10 @@ namespace MyProject
 
         public override void Spawned()
         {
-            if (HasStateAuthority == false)
-                return;
+            if (HasStateAuthority)
+                Nickname = PlayerPrefs.GetString("PlayerName", "Player123");
 
-            Nickname = PlayerPrefs.GetString("PlayerName", "Player123");
+            PlayerRegistry.Instance.AddPlayerEntity(this);
         }
 
         public void SelectChoice(RPSElementType elementType)
