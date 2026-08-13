@@ -2819,7 +2819,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 07e62ff7fd41d7541891d62e12d986cd, type: 2}
     - target: {fileID: 6617460953965441862, guid: eef1f94d7ca278f4792022a18efcf01f, type: 3}
       propertyPath: _startWithCurrentScene
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8279964307433764057, guid: eef1f94d7ca278f4792022a18efcf01f, type: 3}
       propertyPath: m_LocalPosition.x

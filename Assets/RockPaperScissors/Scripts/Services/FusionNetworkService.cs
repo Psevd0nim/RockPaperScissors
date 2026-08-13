@@ -67,7 +67,7 @@ namespace MyProject
                 return;
 
             _players.Add(player);
-            PlayersChanged?.Invoke();
+            NotifyPlayersChanged();
 
             Debug.Log($"OnPlayerJoined: {player}");
         }
@@ -75,14 +75,36 @@ namespace MyProject
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
         {
             _players.Remove(player);
-            PlayersChanged?.Invoke();
+            NotifyPlayersChanged();
 
             Debug.Log($"OnPlayerLeft: {player}");
         }
 
         private void AfterPlayerEntitiesChanged()
         {
+            if (IsSessionRunning() == false)
+                return;
+
             PlayerEntitiesChanged?.Invoke();
+        }
+
+        private void NotifyPlayersChanged()
+        {
+            if (IsSessionRunning() == false)
+                return;
+
+            PlayersChanged?.Invoke();
+        }
+
+        private bool IsSessionRunning()
+        {
+            return _runner != null && _runner.IsRunning;
+        }
+
+        public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+        {
+            _players.Clear();
+            _runner = null;
         }
 
         #region UnusedCallbacks
@@ -143,10 +165,6 @@ namespace MyProject
         }
 
         public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
-        {
-        }
-
-        public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
         {
         }
 
