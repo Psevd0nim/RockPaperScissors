@@ -11,7 +11,7 @@ namespace MyProject
         Draw
     }
 
-    public class NetworkPlayerEntity : NetworkBehaviour
+    public class NetworkPlayerEntity : NetworkBehaviour, IAfterSpawned
     {
         public event Action ChoiceChanged;
         public event Action ScoreChanged;
@@ -27,12 +27,15 @@ namespace MyProject
 
         public override void Spawned()
         {
-            PlayerRegistry.Instance.AddPlayerEntity(this);
-
             if (HasStateAuthority == false)
                 return;
 
             Nickname = PlayerPrefs.GetString("PlayerName", "Player123");
+        }
+
+        public void AfterSpawned()
+        {
+            PlayerRegistry.Instance.AddPlayerEntity(this);
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)

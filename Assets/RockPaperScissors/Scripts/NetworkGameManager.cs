@@ -62,6 +62,9 @@ namespace MyProject
 
         private void TryUpdateMatchState()
         {
+            if (LocalPlayerEntity == null)
+                return;
+
             if (_networkService.Players.Count < 2)
             {
                 OpponentPlayerEntity = null;

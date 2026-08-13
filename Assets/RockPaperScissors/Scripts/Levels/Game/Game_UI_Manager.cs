@@ -35,10 +35,15 @@ namespace MyProject
             _connectingIndicator.Hide();
         }
 
-        public void ShowWaitingForOpponent(string localPlayerName)
+        public void ShowLocalPlayer(string localPlayerName)
+        {
+            _rpsRoundInfoUI.ShowLocalPlayer(localPlayerName);
+        }
+
+        public void ShowWaitingForOpponent()
         {
             _statusText.gameObject.SetActive(false);
-            _rpsRoundInfoUI.ShowWaitingForOpponent(localPlayerName);
+            _rpsRoundInfoUI.ShowWaitingForOpponent();
         }
 
         public void ShowPreparingPlayers(string localPlayerName, string opponentPlayerName)

@@ -37,9 +37,8 @@ namespace MyProject
                     if (_rpsRoundManager.IsMatchActive)
                         _rpsRoundManager.EndMatch();
 
-                    //сомнительно, что здесь нужно передавать никнейм локального игрока, так как мы ждем оппонента
-                    //отдельно указываем информацию свою, отдельно информацию оппонента, чтобы не было путаницы
-                    _gameUIManager.ShowWaitingForOpponent(_networkGameManager.LocalPlayerEntity?.Nickname);
+                    _gameUIManager.ShowLocalPlayer(_networkGameManager.LocalPlayerEntity?.Nickname);
+                    _gameUIManager.ShowWaitingForOpponent();
                     break;
                 case NetworkGameState.ReadyToPlay:
                     _gameUIManager.HideConnectingIndicator();

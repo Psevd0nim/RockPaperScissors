@@ -30,13 +30,19 @@ namespace MyProject
             }
         }
 
-        public void ShowWaitingForOpponent(string localPlayerName)
+        public void ShowLocalPlayer(string localPlayerName)
         {
             _localPlayerName = GetDisplayedName(localPlayerName);
-            _opponentPlayerName = null;
 
             gameObject.SetActive(true);
             _localPlayerText.text = $"YOU\n{_localPlayerName}\nScore: 0";
+        }
+
+        public void ShowWaitingForOpponent()
+        {
+            _opponentPlayerName = null;
+
+            gameObject.SetActive(true);
             _opponentPlayerText.text = "OPPONENT\nWaiting for opponent...";
             HideRoundControls();
         }
