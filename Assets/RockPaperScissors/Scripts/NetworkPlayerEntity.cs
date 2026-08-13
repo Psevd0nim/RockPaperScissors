@@ -27,10 +27,17 @@ namespace MyProject
 
         public override void Spawned()
         {
-            if (HasStateAuthority)
-                Nickname = PlayerPrefs.GetString("PlayerName", "Player123");
-
             PlayerRegistry.Instance.AddPlayerEntity(this);
+
+            if (HasStateAuthority == false)
+                return;
+
+            Nickname = PlayerPrefs.GetString("PlayerName", "Player123");
+        }
+
+        public override void Despawned(NetworkRunner runner, bool hasState)
+        {
+            PlayerRegistry.Instance.RemovePlayerEntity(this);
         }
 
         public void SelectChoice(RPSElementType elementType)

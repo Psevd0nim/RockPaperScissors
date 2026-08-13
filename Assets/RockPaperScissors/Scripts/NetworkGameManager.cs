@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using Fusion;
 using UnityEngine;
 
@@ -30,7 +29,8 @@ namespace MyProject
         public void Init(FusionNetworkService networkService)
         {
             _networkService = networkService;
-            _networkService.PlayersChanged += TotalPlayersChanged;
+            _networkService.PlayersChanged += TryUpdateMatchState;
+            _networkService.PlayerEntitiesChanged += TryUpdateMatchState;
         }
 
         public async void StartNetworkSession()
@@ -57,10 +57,10 @@ namespace MyProject
 
             LocalPlayerEntity = localPlayerEntity;
 
-            TotalPlayersChanged();
+            TryUpdateMatchState();
         }
 
-        private void TotalPlayersChanged()
+        private void TryUpdateMatchState()
         {
             if (_networkService.Players.Count < 2)
             {
@@ -103,8 +103,11 @@ namespace MyProject
 
         private void OnDestroy()
         {
-            if (_networkService != null)
-                _networkService.PlayersChanged -= TotalPlayersChanged;
+            if (_networkService == null)
+                return;
+
+            _networkService.PlayersChanged -= TryUpdateMatchState;
+            _networkService.PlayerEntitiesChanged -= TryUpdateMatchState;
         }
     }
 }
