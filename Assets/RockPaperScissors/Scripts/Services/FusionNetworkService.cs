@@ -51,6 +51,15 @@ namespace MyProject
             return startGameResult;
         }
 
+        public async Task ShutdownGameSessionAsync()
+        {
+            NetworkRunner runner = _runner;
+            if (runner == null)
+                return;
+
+            await runner.Shutdown();
+        }
+
         public bool TryGetNetworkPlayerEntity(PlayerRef player, out NetworkPlayerEntity playerEntity)
         {
             playerEntity = null;
@@ -103,6 +112,9 @@ namespace MyProject
 
         public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
         {
+            if (_runner != runner)
+                return;
+
             _players.Clear();
             _runner = null;
         }

@@ -7,17 +7,28 @@ namespace MyProject
     public class Game_UI_Manager : UI_Manager
     {
         public event Action<RPSElementType> ChoiceSelected;
+        public event Action MenuPressed;
 
         [SerializeField] private ConnectingIndicator _connectingIndicator;
         [SerializeField] private TextMeshProUGUI _countPlayersText;
         [SerializeField] private TextMeshProUGUI _statusText;
         [SerializeField] private RPSRoundInfo_UI _rpsRoundInfoUI;
+        [SerializeField] private GameObject _pausePanel;
+        [SerializeField] private Button_UI _pauseButton;
+        [SerializeField] private PauseBoard_UI _pauseBoard;
 
         public override void Init(AudioManager audioManager)
         {
             base.Init(audioManager);
             _rpsRoundInfoUI.Init();
             _rpsRoundInfoUI.ChoiceSelected += OnChoiceSelected;
+
+            _pauseBoard.Init();
+            _pauseButton.OnPressed += ShowPausePanel;
+            _pauseBoard.ResumePressed += HidePausePanel;
+            _pauseBoard.MenuPressed += OnMenuPressed;
+
+            HidePausePanel();
         }
 
         public void ShowPlayersCount(int playersCount)
@@ -90,10 +101,30 @@ namespace MyProject
             ChoiceSelected?.Invoke(elementType);
         }
 
+        private void ShowPausePanel()
+        {
+            _pausePanel.SetActive(true);
+        }
+
+        private void HidePausePanel()
+        {
+            _pausePanel.SetActive(false);
+        }
+
+        private void OnMenuPressed()
+        {
+            MenuPressed?.Invoke();
+        }
+
         private void OnDestroy()
         {
-            if (_rpsRoundInfoUI != null)
-                _rpsRoundInfoUI.ChoiceSelected -= OnChoiceSelected;
+            if (_rpsRoundInfoUI == null)
+                return;
+
+            _rpsRoundInfoUI.ChoiceSelected -= OnChoiceSelected;
+            _pauseButton.OnPressed -= ShowPausePanel;
+            _pauseBoard.ResumePressed -= HidePausePanel;
+            _pauseBoard.MenuPressed -= OnMenuPressed;
         }
     }
 }

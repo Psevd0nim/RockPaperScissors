@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace MyProject
@@ -8,11 +9,17 @@ namespace MyProject
         [SerializeField] private NetworkGameManager _networkGameManager;
         [SerializeField] private RpsRoundManager _rpsRoundManager;
 
+        private FusionNetworkService _networkService;
+        private bool _isExiting;
+
         public override void Init(AppServices appServices)
         {
             _gameUIManager.Init(appServices.AudioManager);
             _rpsRoundManager.Init(_gameUIManager);
-            _networkGameManager.Init(appServices.NetworkService);
+            _networkService = appServices.NetworkService;
+            _networkGameManager.Init(_networkService);
+
+            _gameUIManager.MenuPressed += ExitToMenu;
             _networkGameManager.StateChanged += OnNetworkGameStateChanged;
         }
 
@@ -53,10 +60,33 @@ namespace MyProject
             }
         }
 
+        private async void ExitToMenu()
+        {
+            if (_isExiting)
+                return;
+
+            _isExiting = true;
+            _gameUIManager.CloseTransition();
+
+            try
+            {
+                await _networkService.ShutdownGameSessionAsync();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception);
+            }
+
+            OnExitLevel?.Invoke(this, Constants.MenuSceneName, 1.2f);
+        }
+
         private void OnDestroy()
         {
-            if (_networkGameManager != null)
-                _networkGameManager.StateChanged -= OnNetworkGameStateChanged;
+            if (_networkGameManager == null)
+                return;
+
+            _gameUIManager.MenuPressed -= ExitToMenu;
+            _networkGameManager.StateChanged -= OnNetworkGameStateChanged;
         }
     }
 }

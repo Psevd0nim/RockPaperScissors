@@ -85,8 +85,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1134254046676976236}
   - component: {fileID: 1102497768805169184}
-  - component: {fileID: 4712392164650554774}
   - component: {fileID: 7061303103166800364}
+  - component: {fileID: 4712392164650554774}
   m_Layer: 5
   m_Name: SoundButton
   m_TagString: Untagged
@@ -133,6 +133,20 @@ MonoBehaviour:
   _disableSprite: {fileID: 21300000, guid: 34d6a24a0745c2c4b9deb8b48682bee0, type: 3}
   _enableColor: {r: 0.011764706, g: 0.85882354, b: 0.039215688, a: 1}
   _disableColor: {r: 0.85882354, g: 0.011764706, b: 0.011764706, a: 1}
+--- !u!114 &7061303103166800364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547945601892554928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6545e8414c25f842a0cb2f41b923178, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyProject.BounceEffect
+  _bounceTime: 0.2
+  _bounceScale: 1.1
 --- !u!114 &4712392164650554774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,20 +203,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &7061303103166800364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1547945601892554928}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6545e8414c25f842a0cb2f41b923178, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MyProject.BounceEffect
-  _bounceTime: 0.2
-  _bounceScale: 1.1
 --- !u!1 &3164340377208948442
 GameObject:
   m_ObjectHideFlags: 0

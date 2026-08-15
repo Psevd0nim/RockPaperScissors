@@ -365,6 +365,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2c5bc2c06af52d47a5f5d60d67637f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyProject.SoundButton
+--- !u!114 &322346952 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8450392165401127742, guid: c8c6e3c464a9a354d92ebb58d3140193, type: 3}
+  m_PrefabInstance: {fileID: 322346949}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e53a0161c3b4fcf9b3c9e1ee0d2f912, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyProject.PauseBoard_UI
 --- !u!1 &375377811
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,6 +820,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8870168457203095095, guid: e73e2e0718552e64286fc13bef929b44, type: 3}
   m_PrefabInstance: {fileID: 699920659}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &761674870 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5588488840277911846, guid: e73e2e0718552e64286fc13bef929b44, type: 3}
+  m_PrefabInstance: {fileID: 699920659}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86e4426816940014c9edea54ef66e7b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillsArena.Button_UI
 --- !u!1 &824995915
 GameObject:
   m_ObjectHideFlags: 0
@@ -1047,6 +1069,9 @@ MonoBehaviour:
   _countPlayersText: {fileID: 1413583326}
   _statusText: {fileID: 147777247}
   _rpsRoundInfoUI: {fileID: 2100000003}
+  _pausePanel: {fileID: 1248339298}
+  _pauseButton: {fileID: 761674870}
+  _pauseBoard: {fileID: 322346952}
 --- !u!1 &1349386391
 GameObject:
   m_ObjectHideFlags: 0

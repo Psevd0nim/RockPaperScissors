@@ -78,10 +78,6 @@ namespace MyProject
                 OpponentPlayerEntity = opponentPlayerEntity;
                 ChangeState(NetworkGameState.ReadyToPlay);
             }
-            else
-            {
-                Debug.Log("OpponentPlayerRef connected but no NetworkPlayerEntity found for it.");
-            }
         }
 
         private PlayerRef FindOpponent(PlayerRef localPlayer)
