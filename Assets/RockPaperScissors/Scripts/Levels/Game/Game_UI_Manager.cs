@@ -20,13 +20,15 @@ namespace MyProject
         public override void Init(AudioManager audioManager)
         {
             base.Init(audioManager);
+
             _rpsRoundInfoUI.Init();
             _rpsRoundInfoUI.ChoiceSelected += OnChoiceSelected;
 
             _pauseBoard.Init();
-            _pauseButton.OnPressed += ShowPausePanel;
             _pauseBoard.ResumePressed += HidePausePanel;
             _pauseBoard.MenuPressed += OnMenuPressed;
+
+            _pauseButton.OnPressed += ShowPausePanel;
 
             HidePausePanel();
         }
@@ -55,12 +57,6 @@ namespace MyProject
         {
             _statusText.gameObject.SetActive(false);
             _rpsRoundInfoUI.ShowWaitingForOpponent();
-        }
-
-        public void ShowPreparingPlayers(string localPlayerName, string opponentPlayerName)
-        {
-            _statusText.gameObject.SetActive(false);
-            _rpsRoundInfoUI.ShowPreparingPlayers(localPlayerName, opponentPlayerName);
         }
 
         public void ShowConnectionFailed()
@@ -118,9 +114,6 @@ namespace MyProject
 
         private void OnDestroy()
         {
-            if (_rpsRoundInfoUI == null)
-                return;
-
             _rpsRoundInfoUI.ChoiceSelected -= OnChoiceSelected;
             _pauseButton.OnPressed -= ShowPausePanel;
             _pauseBoard.ResumePressed -= HidePausePanel;
