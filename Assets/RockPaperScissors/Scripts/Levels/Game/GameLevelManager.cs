@@ -44,14 +44,12 @@ namespace MyProject
                     if (_rpsRoundManager.IsMatchActive)
                         _rpsRoundManager.EndMatch();
 
-                    _gameUIManager.ShowLocalPlayer(_networkGameManager.LocalPlayerEntity?.Nickname);
+                    _gameUIManager.ShowLocalPlayer(_networkGameManager.LocalPlayerEntity.Nickname);
                     _gameUIManager.ShowWaitingForOpponent();
                     break;
                 case NetworkGameState.ReadyToPlay:
                     _gameUIManager.HideConnectingIndicator();
-                    _rpsRoundManager.StartMatch(
-                        _networkGameManager.LocalPlayerEntity,
-                        _networkGameManager.OpponentPlayerEntity);
+                    _rpsRoundManager.StartMatch(_networkGameManager.LocalPlayerEntity, _networkGameManager.OpponentPlayerEntity);
                     break;
                 case NetworkGameState.ConnectionFailed:
                     _gameUIManager.HideConnectingIndicator();
@@ -82,11 +80,10 @@ namespace MyProject
 
         private void OnDestroy()
         {
-            if (_networkGameManager == null)
-                return;
-
             _gameUIManager.MenuPressed -= ExitToMenu;
-            _networkGameManager.StateChanged -= OnNetworkGameStateChanged;
+
+            if (_networkGameManager != null)
+                _networkGameManager.StateChanged -= OnNetworkGameStateChanged;
         }
     }
 }

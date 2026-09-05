@@ -20,7 +20,7 @@ namespace MyProject
         public NetworkGameState State { get; private set; } = NetworkGameState.NotStarted;
         public NetworkPlayerEntity LocalPlayerEntity { get; private set; }
         public NetworkPlayerEntity OpponentPlayerEntity { get; private set; }
-        public int PlayersCount => _networkService?.Players.Count ?? 0;
+        public int PlayersCount => _networkService.Players.Count;
 
         [SerializeField] private NetworkPlayerEntity _playerEntityPrefab;
 
