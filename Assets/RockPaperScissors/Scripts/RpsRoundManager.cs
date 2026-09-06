@@ -5,7 +5,7 @@ namespace MyProject
 {
     public class RpsRoundManager : MonoBehaviour
     {
-        public bool IsMatchActive => _localPlayerEntity != null;
+        public bool IsMatchActive { get; private set; }
 
         private Game_UI_Manager _gameUI;
         private NetworkPlayerEntity _localPlayerEntity;
@@ -14,19 +14,17 @@ namespace MyProject
         public void Init(Game_UI_Manager gameUI)
         {
             _gameUI = gameUI;
-            _gameUI.ChoiceSelected += SelectChoice;
         }
 
         public void StartMatch(NetworkPlayerEntity localPlayerEntity, NetworkPlayerEntity opponentPlayerEntity)
         {
-            if (IsMatchActive)
-                return;
-
             _localPlayerEntity = localPlayerEntity;
             _opponentPlayerEntity = opponentPlayerEntity;
+            IsMatchActive = true;
 
-            _localPlayerEntity.ChoiceChanged += PlayerChoiceChanged;
-            _opponentPlayerEntity.ChoiceChanged += PlayerChoiceChanged;
+            _gameUI.ElementSelected += SelectElement;
+            _localPlayerEntity.SelectedElementChanged += UpdateRoundState;
+            _opponentPlayerEntity.SelectedElementChanged += UpdateRoundState;
             _localPlayerEntity.ScoreChanged += UpdateScores;
             _opponentPlayerEntity.ScoreChanged += UpdateScores;
 
@@ -39,14 +37,16 @@ namespace MyProject
             if (IsMatchActive == false)
                 return;
 
+            IsMatchActive = false;
             StopAllCoroutines();
 
-            _localPlayerEntity.ChoiceChanged -= PlayerChoiceChanged;
+            _gameUI.ElementSelected -= SelectElement;
+            _localPlayerEntity.SelectedElementChanged -= UpdateRoundState;
             _localPlayerEntity.ScoreChanged -= UpdateScores;
 
             if (_opponentPlayerEntity != null)
             {
-                _opponentPlayerEntity.ChoiceChanged -= PlayerChoiceChanged;
+                _opponentPlayerEntity.SelectedElementChanged -= UpdateRoundState;
                 _opponentPlayerEntity.ScoreChanged -= UpdateScores;
             }
 
@@ -56,38 +56,35 @@ namespace MyProject
             _opponentPlayerEntity = null;
         }
 
-        private void SelectChoice(RPSElementType elementType)
+        private void SelectElement(RPSElementType elementType)
         {
-            if (IsMatchActive == false)
-                return;
-
-            _localPlayerEntity.SelectChoice(elementType);
+            _localPlayerEntity.SetSelectedElement(elementType);
             _gameUI.ShowLocalChoice(elementType);
         }
 
-        private void PlayerChoiceChanged()
+        private void UpdateRoundState()
         {
-            bool bothPlayersSelected = _localPlayerEntity.Choice != RPSElementType.None && _opponentPlayerEntity.Choice != RPSElementType.None;
-            bool bothChoicesAreReset = _localPlayerEntity.Choice == RPSElementType.None && _opponentPlayerEntity.Choice == RPSElementType.None;
+            bool bothElementsSelected = _localPlayerEntity.SelectedElement != RPSElementType.None && _opponentPlayerEntity.SelectedElement != RPSElementType.None;
+            bool bothElementsAreReset = _localPlayerEntity.SelectedElement == RPSElementType.None && _opponentPlayerEntity.SelectedElement == RPSElementType.None;
 
-            if (bothPlayersSelected)
+            if (bothElementsSelected)
                 StartCoroutine(ShowRoundResult());
-            else if (bothChoicesAreReset)
-                _gameUI.PrepareNextRound();
+            else if (bothElementsAreReset)
+                _gameUI.ShowElementSelection();
         }
 
         private IEnumerator ShowRoundResult()
         {
-            RpsRoundResult result = GetRoundResult(_localPlayerEntity.Choice, _opponentPlayerEntity.Choice);
+            RpsRoundResult result = GetRoundResult(_localPlayerEntity.SelectedElement, _opponentPlayerEntity.SelectedElement);
 
             if (result == RpsRoundResult.Win)
                 _localPlayerEntity.AddPoint();
 
-            _gameUI.ShowRound(_localPlayerEntity.Choice, _opponentPlayerEntity.Choice, result);
+            _gameUI.ShowRound(_localPlayerEntity.SelectedElement, _opponentPlayerEntity.SelectedElement, result);
 
             yield return new WaitForSeconds(2f);
 
-            _localPlayerEntity.ResetChoice();
+            _localPlayerEntity.ResetSelectedElement();
         }
 
         private void UpdateScores()
@@ -110,8 +107,7 @@ namespace MyProject
 
         private void OnDestroy()
         {
-            if (_gameUI != null)
-                _gameUI.ChoiceSelected -= SelectChoice;
+            _gameUI.ElementSelected -= SelectElement;
         }
     }
 }

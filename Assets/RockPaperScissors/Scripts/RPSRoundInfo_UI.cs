@@ -8,7 +8,7 @@ namespace MyProject
 {
     public class RPSRoundInfo_UI : MonoBehaviour
     {
-        public event Action<RPSElementType> ChoiceSelected;
+        public event Action<RPSElementType> ElementSelected;
 
         [SerializeField] private RPSConfig _rpsConfig;
         [SerializeField] private List<RPSButton_UI> _choiceButtons;
@@ -67,7 +67,7 @@ namespace MyProject
             _localPlayerText.text = $"YOU\n{_localPlayerName}\nScore: 0";
             _opponentPlayerText.text = $"OPPONENT\n{_opponentPlayerName}\nScore: 0";
 
-            PrepareNextRound();
+            ShowElementSelection();
         }
 
         public void Hide()
@@ -96,7 +96,7 @@ namespace MyProject
             _opponentPlayerText.text = $"OPPONENT\n{_opponentPlayerName}\nScore: {opponentScore}";
         }
 
-        public void PrepareNextRound()
+        public void ShowElementSelection()
         {
             _localChoiceImage.gameObject.SetActive(false);
             _opponentChoiceImage.gameObject.SetActive(false);
@@ -106,7 +106,7 @@ namespace MyProject
 
         private void OnElementSelected(RPSElementType elementType)
         {
-            ChoiceSelected?.Invoke(elementType);
+            ElementSelected?.Invoke(elementType);
         }
 
         private void ShowElement(Image elementImage, RPSElementType elementType)

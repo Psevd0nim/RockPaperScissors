@@ -6,7 +6,7 @@ namespace MyProject
 {
     public class Game_UI_Manager : UI_Manager
     {
-        public event Action<RPSElementType> ChoiceSelected;
+        public event Action<RPSElementType> ElementSelected;
         public event Action MenuPressed;
 
         [SerializeField] private ConnectingIndicator _connectingIndicator;
@@ -22,7 +22,7 @@ namespace MyProject
             base.Init(audioManager);
 
             _rpsRoundInfoUI.Init();
-            _rpsRoundInfoUI.ChoiceSelected += OnChoiceSelected;
+            _rpsRoundInfoUI.ElementSelected += OnElementSelected;
 
             _pauseBoard.Init();
             _pauseBoard.ResumePressed += HidePausePanel;
@@ -87,14 +87,14 @@ namespace MyProject
             _rpsRoundInfoUI.UpdateScores(localScore, opponentScore);
         }
 
-        public void PrepareNextRound()
+        public void ShowElementSelection()
         {
-            _rpsRoundInfoUI.PrepareNextRound();
+            _rpsRoundInfoUI.ShowElementSelection();
         }
 
-        private void OnChoiceSelected(RPSElementType elementType)
+        private void OnElementSelected(RPSElementType elementType)
         {
-            ChoiceSelected?.Invoke(elementType);
+            ElementSelected?.Invoke(elementType);
         }
 
         private void ShowPausePanel()
@@ -114,7 +114,7 @@ namespace MyProject
 
         private void OnDestroy()
         {
-            _rpsRoundInfoUI.ChoiceSelected -= OnChoiceSelected;
+            _rpsRoundInfoUI.ElementSelected -= OnElementSelected;
             _pauseButton.OnPressed -= ShowPausePanel;
             _pauseBoard.ResumePressed -= HidePausePanel;
             _pauseBoard.MenuPressed -= OnMenuPressed;

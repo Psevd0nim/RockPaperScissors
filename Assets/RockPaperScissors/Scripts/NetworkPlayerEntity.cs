@@ -13,11 +13,11 @@ namespace MyProject
 
     public class NetworkPlayerEntity : NetworkBehaviour, IAfterSpawned
     {
-        public event Action ChoiceChanged;
+        public event Action SelectedElementChanged;
         public event Action ScoreChanged;
 
-        [Networked, OnChangedRender(nameof(NotifyChoiceChanged))]
-        public RPSElementType Choice { get; set; }
+        [Networked, OnChangedRender(nameof(NotifySelectedElementChanged))]
+        public RPSElementType SelectedElement { get; set; }
 
         [Networked, OnChangedRender(nameof(NotifyScoreChanged))]
         public int Score { get; set; }
@@ -43,9 +43,9 @@ namespace MyProject
             PlayerRegistry.Instance.RemovePlayerEntity(this);
         }
 
-        public void SelectChoice(RPSElementType elementType)
+        public void SetSelectedElement(RPSElementType elementType)
         {
-            Choice = elementType;
+            SelectedElement = elementType;
         }
 
         public void AddPoint()
@@ -53,20 +53,20 @@ namespace MyProject
             Score++;
         }
 
-        public void ResetChoice()
+        public void ResetSelectedElement()
         {
-            Choice = RPSElementType.None;
+            SelectedElement = RPSElementType.None;
         }
 
         public void Reset()
         {
-            Choice = RPSElementType.None;
+            SelectedElement = RPSElementType.None;
             Score = 0;
         }
 
-        private void NotifyChoiceChanged()
+        private void NotifySelectedElementChanged()
         {
-            ChoiceChanged?.Invoke();
+            SelectedElementChanged?.Invoke();
         }
 
         private void NotifyScoreChanged()
