@@ -39,14 +39,12 @@ namespace MyProject
 
             StartGameResult startGameResult = await _networkService.StartGameSessionAsync();
 
-            Debug.Log($"StartGameResult.Ok: {startGameResult.Ok}");
-            Debug.Log($"StartGameResult.ShutdownReason: {startGameResult.ShutdownReason}");
-            Debug.Log($"StartGameResult.ErrorMessage: \"{startGameResult.ErrorMessage}\"");
-
             if (startGameResult.Ok == false)
             {
+                Debug.Log($"StartGameResult.ShutdownReason: {startGameResult.ShutdownReason}");
+                Debug.Log($"StartGameResult.ErrorMessage: \"{startGameResult.ErrorMessage}\"");
+
                 ChangeState(NetworkGameState.ConnectionFailed);
-                return;
             }
         }
 
@@ -65,14 +63,13 @@ namespace MyProject
             if (LocalPlayerEntity == null)
                 return;
 
-            if (_networkService.Players.Count < 2)
+            if (TryFindOpponent(out PlayerRef opponentPlayer) == false)
             {
                 OpponentPlayerEntity = null;
                 ChangeState(NetworkGameState.WaitingForOpponent);
                 return;
             }
 
-            PlayerRef opponentPlayer = FindOpponent(Runner.LocalPlayer);
             if (_networkService.TryGetNetworkPlayerEntity(opponentPlayer, out NetworkPlayerEntity opponentPlayerEntity))
             {
                 OpponentPlayerEntity = opponentPlayerEntity;
@@ -80,21 +77,25 @@ namespace MyProject
             }
         }
 
-        private PlayerRef FindOpponent(PlayerRef localPlayer)
+        private bool TryFindOpponent(out PlayerRef opponentPlayer)
         {
             foreach (PlayerRef player in _networkService.Players)
             {
-                if (player != localPlayer)
-                    return player;
+                if (player != _networkService.LocalPlayer)
+                {
+                    opponentPlayer = player;
+                    return true;
+                }
             }
 
-            return PlayerRef.None;
+            opponentPlayer = PlayerRef.None;
+            return false;
         }
 
         private void ChangeState(NetworkGameState state)
         {
-            /*if (State == state)
-                return;*/
+            if (State == state)
+                return;
 
             State = state;
             StateChanged?.Invoke(State);
@@ -102,9 +103,6 @@ namespace MyProject
 
         private void OnDestroy()
         {
-            if (_networkService == null)
-                return;
-
             _networkService.PlayersChanged -= TryUpdateMatchState;
             _networkService.PlayerEntitiesChanged -= TryUpdateMatchState;
         }
