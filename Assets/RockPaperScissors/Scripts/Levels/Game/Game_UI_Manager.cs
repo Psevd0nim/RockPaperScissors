@@ -72,9 +72,9 @@ namespace MyProject
             _rpsRoundInfoUI.Show(localPlayerName, opponentPlayerName);
         }
 
-        public void ShowLocalChoice(RPSElementType elementType)
+        public void ShowLocalSelectedElement(RPSElementType elementType)
         {
-            _rpsRoundInfoUI.ShowLocalChoice(elementType);
+            _rpsRoundInfoUI.ShowLocalSelectedElement(elementType);
         }
 
         public void ShowRound(RPSElementType localElement, RPSElementType opponentElement, RpsRoundResult result)

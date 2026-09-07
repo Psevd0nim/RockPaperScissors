@@ -11,11 +11,11 @@ namespace MyProject
         public event Action<RPSElementType> ElementSelected;
 
         [SerializeField] private RPSConfig _rpsConfig;
-        [SerializeField] private List<RPSButton_UI> _choiceButtons;
+        [SerializeField] private List<RPSButton_UI> _elementButtons;
         [SerializeField] private TextMeshProUGUI _localPlayerText;
         [SerializeField] private TextMeshProUGUI _opponentPlayerText;
-        [SerializeField] private Image _localChoiceImage;
-        [SerializeField] private Image _opponentChoiceImage;
+        [SerializeField] private Image _localSelectedElementImage;
+        [SerializeField] private Image _opponentSelectedElementImage;
         [SerializeField] private TextMeshProUGUI _roundResultText;
 
         private string _localPlayerName;
@@ -23,10 +23,10 @@ namespace MyProject
 
         public void Init()
         {
-            foreach (RPSButton_UI choiceButton in _choiceButtons)
+            foreach (RPSButton_UI elementButton in _elementButtons)
             {
-                choiceButton.Init(_rpsConfig.GetSpriteByType(choiceButton.ElementType));
-                choiceButton.ElementSelected += OnElementSelected;
+                elementButton.Init(_rpsConfig.GetSpriteByType(elementButton.ElementType));
+                elementButton.ElementSelected += OnElementSelected;
             }
         }
 
@@ -75,16 +75,16 @@ namespace MyProject
             gameObject.SetActive(false);
         }
 
-        public void ShowLocalChoice(RPSElementType elementType)
+        public void ShowLocalSelectedElement(RPSElementType elementType)
         {
-            ShowElement(_localChoiceImage, elementType);
-            SetChoiceButtonsActive(false);
+            ShowElement(_localSelectedElementImage, elementType);
+            SetElementButtonsActive(false);
         }
 
         public void ShowRound(RPSElementType localElement, RPSElementType opponentElement, RpsRoundResult result)
         {
-            ShowElement(_localChoiceImage, localElement);
-            ShowElement(_opponentChoiceImage, opponentElement);
+            ShowElement(_localSelectedElementImage, localElement);
+            ShowElement(_opponentSelectedElementImage, opponentElement);
 
             _roundResultText.text = result.ToString();
             _roundResultText.gameObject.SetActive(true);
@@ -98,10 +98,10 @@ namespace MyProject
 
         public void ShowElementSelection()
         {
-            _localChoiceImage.gameObject.SetActive(false);
-            _opponentChoiceImage.gameObject.SetActive(false);
+            _localSelectedElementImage.gameObject.SetActive(false);
+            _opponentSelectedElementImage.gameObject.SetActive(false);
             _roundResultText.gameObject.SetActive(false);
-            SetChoiceButtonsActive(true);
+            SetElementButtonsActive(true);
         }
 
         private void OnElementSelected(RPSElementType elementType)
@@ -115,18 +115,18 @@ namespace MyProject
             elementImage.gameObject.SetActive(true);
         }
 
-        private void SetChoiceButtonsActive(bool isActive)
+        private void SetElementButtonsActive(bool isActive)
         {
-            foreach (RPSButton_UI choiceButton in _choiceButtons)
-                choiceButton.gameObject.SetActive(isActive);
+            foreach (RPSButton_UI elementButton in _elementButtons)
+                elementButton.gameObject.SetActive(isActive);
         }
 
         private void HideRoundControls()
         {
-            _localChoiceImage.gameObject.SetActive(false);
-            _opponentChoiceImage.gameObject.SetActive(false);
+            _localSelectedElementImage.gameObject.SetActive(false);
+            _opponentSelectedElementImage.gameObject.SetActive(false);
             _roundResultText.gameObject.SetActive(false);
-            SetChoiceButtonsActive(false);
+            SetElementButtonsActive(false);
         }
 
         private string GetDisplayedName(string playerName)
@@ -136,8 +136,8 @@ namespace MyProject
 
         private void OnDestroy()
         {
-            foreach (RPSButton_UI choiceButton in _choiceButtons)
-                choiceButton.ElementSelected -= OnElementSelected;
+            foreach (RPSButton_UI elementButton in _elementButtons)
+                elementButton.ElementSelected -= OnElementSelected;
         }
     }
 }

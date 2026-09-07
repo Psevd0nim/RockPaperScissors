@@ -59,7 +59,7 @@ namespace MyProject
         private void SelectElement(RPSElementType elementType)
         {
             _localPlayerEntity.SetSelectedElement(elementType);
-            _gameUI.ShowLocalChoice(elementType);
+            _gameUI.ShowLocalSelectedElement(elementType);
         }
 
         private void UpdateRoundState()

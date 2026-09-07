@@ -1805,14 +1805,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyProject.RPSRoundInfo_UI
   _rpsConfig: {fileID: 11400000, guid: 99de7e51b03d3ca489d2bbd3f5fe3a5c, type: 2}
-  _choiceButtons:
+  _elementButtons:
   - {fileID: 2100000103}
   - {fileID: 2100000203}
   - {fileID: 2100000303}
   _localPlayerText: {fileID: 2100000014}
   _opponentPlayerText: {fileID: 2100000024}
-  _localChoiceImage: {fileID: 2100000044}
-  _opponentChoiceImage: {fileID: 2100000054}
+  _localSelectedElementImage: {fileID: 2100000044}
+  _opponentSelectedElementImage: {fileID: 2100000054}
   _roundResultText: {fileID: 2100000064}
 --- !u!1 &2100000011
 GameObject:
@@ -2100,7 +2100,7 @@ GameObject:
   - component: {fileID: 2100000043}
   - component: {fileID: 2100000044}
   m_Layer: 5
-  m_Name: LocalChoiceImage
+  m_Name: LocalElementSelectedImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2175,7 +2175,7 @@ GameObject:
   - component: {fileID: 2100000053}
   - component: {fileID: 2100000054}
   m_Layer: 5
-  m_Name: OpponentChoiceImage
+  m_Name: OpponentElementSelectedImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2844,7 +2844,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 07e62ff7fd41d7541891d62e12d986cd, type: 2}
     - target: {fileID: 6617460953965441862, guid: eef1f94d7ca278f4792022a18efcf01f, type: 3}
       propertyPath: _startWithCurrentScene
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8279964307433764057, guid: eef1f94d7ca278f4792022a18efcf01f, type: 3}
       propertyPath: m_LocalPosition.x
