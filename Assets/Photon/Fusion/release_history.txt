@@ -1,3 +1,33 @@
+# 2.1.2
+
+## Stable
+
+### Build 2279 (Aug 13, 2026)
+
+**What's New**
+
+- New LagCompensation trace channel
+- Add the ability to adjust the Client/Server max packets per send limits, these are settable on the NetworkProjectConfig from code only and only effect the server sends. See NetworkProjectConfig.Network.GameChannelSendCount and NetworkProjectConfig.Network.GameReliableChannelSendCount
+
+**Changes**
+
+- Update to Photon Realtime SDK to 5.1.18
+- Improve documentation for `NetworkRunner.GetPlayerRtt` and `NetworkRunner.GetRttToPhotonCloud`
+- When receiving a NetworkObject spawn change some Asserts to Assert.Always to avoid memory corruption in release builds
+- HitboxManager will auto-destroy if lag compensation is not enabled on NetworkProjectConfig
+- Caching HitboxManager reference
+
+**Bug Fixes**
+
+- Fixed: Network conditions now working again
+- Fixed: Remove incorrect Assert.Check(tick >= sc._latestTickAcknowledged), which could fire if a time reset occured or on extreme packet loss
+- Fixed: Non-Forecasted rigidbodies with interpolation turned on incorrect spawn at 0,0,0
+- Fixed: `NetworkSceneManagerDefault` not ignoring scene `NetworkObjects` that have not been baked, e.g. on-scene pools
+- Fixed: An issue where locally predicted objects could get the wrong snapshot pair from `NetworkBehaviour.TryGetSnapshotBuffers` in very low latency conditions (such as multi-peer mode)
+- Fixed: Prevent NRE if the network state has not yet arrived for a Forecast transform
+- Fixed: Moving NetworkProjectConfig sometimes caused a new NetworkProjectConfig to be created at the default path
+- Fixed: Wrong reconnecting flag on CloudConnectionLost when moving the another Session
+
 # 2.1.1
 
 ## Stable

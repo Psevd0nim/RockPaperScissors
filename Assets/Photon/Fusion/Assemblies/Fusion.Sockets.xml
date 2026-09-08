@@ -1267,6 +1267,21 @@
             General configuration used to drive the behavior of the Socket library
             </summary>
         </member>
+        <member name="F:Fusion.Sockets.NetConfig.DefaultGameSendCount">
+            <summary>
+            The default number of packets sent per send on the unreliable channel
+            </summary>
+        </member>
+        <member name="F:Fusion.Sockets.NetConfig.DefaultGameReliableSendCount">
+            <summary>
+            The default number of packets sent per send on the reliable channel
+            </summary>
+        </member>
+        <member name="F:Fusion.Sockets.NetConfig.MaxChannelSendCount">
+            <summary>
+            Hard cap on the configurable per-send packet counts (<see cref="F:Fusion.Sockets.NetConfig.GameSendCount"/> / <see cref="F:Fusion.Sockets.NetConfig.GameReliableSendCount"/>).
+            </summary>
+        </member>
         <member name="F:Fusion.Sockets.NetConfig.ConnectionSendBuffers">
             <summary>
             Pre-allocated number of data buffers used to send data 
@@ -1353,12 +1368,22 @@
             Network Address used to bind the internal Socket
             </summary>
         </member>
+        <member name="F:Fusion.Sockets.NetConfig.GameSendCount">
+            <summary>
+            Maximum Game-channel packets sent per send tick. Defaults to <see cref="F:Fusion.Sockets.NetConfig.DefaultGameSendCount"/>.
+            </summary>
+        </member>
+        <member name="F:Fusion.Sockets.NetConfig.GameReliableSendCount">
+            <summary>
+            Maximum reliable-fallback-channel packets sent per send tick. Defaults to <see cref="F:Fusion.Sockets.NetConfig.DefaultGameReliableSendCount"/>.
+            </summary>
+        </member>
         <member name="F:Fusion.Sockets.NetConfig.Notify">
             <summary>
             Package acknowledgment system configuration
             </summary>
         </member>
-        <member name="P:Fusion.Sockets.NetConfig.Simulation">
+        <member name="F:Fusion.Sockets.NetConfig.Simulation">
             <summary>
             Network simulation system configuration
             </summary>

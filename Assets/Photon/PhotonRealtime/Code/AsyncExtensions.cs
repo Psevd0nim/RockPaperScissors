@@ -318,7 +318,7 @@ namespace Photon.Realtime
                     var appSettingsCopy = new AppSettings(appSettings);
                     appSettingsCopy.FixedRegion = null;
 
-                    client.GetRegions(appSettingsCopy, ping: pingRegions);
+                    client.GetRegions(appSettingsCopy, false);  // deliberately skip this "ping" option. there is an explicit call to PingAvailableRegions() below.
                 }
                 // everything else
                 else

@@ -275,8 +275,8 @@
             reached only via DispatchAckQueue (called from SendOutgoingCommands); the read and clear are in the
             send pump too. No cross-thread access, so a plain field is sufficient (no Interlocked needed).</remarks>
         </member>
-        <member name="F:Photon.Client.EnetPeer.outgoingAcknowledgementsPool">
-            <summary>One pool of ACK byte arrays ( 20 bytes each)  for all channels to keep acknowledgements.</summary>
+        <member name="F:Photon.Client.EnetPeer.outgoingAcknowledgementsBuffer">
+            <summary>One buffer of ACK byte arrays (20 bytes each)  for all channels to keep acknowledgements.</summary>
         </member>
         <member name="F:Photon.Client.EnetPeer.udpBufferEncryptedLayout">
             <summary>Layout of the datagram currently being assembled (encrypted: commands at offset 5; plain: commands at offset 12, 16 with CRC).</summary>
@@ -686,6 +686,16 @@
         <member name="M:Photon.Client.NCommand.Initialize(Photon.Client.EnetPeer,System.Byte,Photon.Client.StreamBuffer,System.Byte,Photon.Client.ConnectionStateValue)">
             <summary>this variant does only create outgoing commands and increments . incoming ones are created from a DataInputStream</summary>
         </member>
+        <member name="M:Photon.Client.NCommand.Initialize(Photon.Client.EnetPeer,System.Byte[],System.Int32@,System.Int32,System.Int32)">
+            <summary>
+            Parses one incoming command out of <paramref name="inBuff"/> starting at <paramref name="readingOffset"/>.
+            <paramref name="dataLength"/> is the number of valid bytes in the buffer (for datagram-encrypted connections
+            this is the decrypted length, which can be shorter than inBuff.Length because the decrypt buffer is reused).
+            Returns false if the command header or its declared body/payload would read past that valid region - the
+            caller then drops the rest of the (truncated/malformed) datagram. All reads are bounded so a corrupt or
+            short datagram can neither throw nor copy stale buffer bytes into a dispatched payload.
+            </summary>
+        </member>
         <member name="T:Photon.Client.SimulationItem">
             <summary>
             A simulation item is an action that can be queued to simulate network lag.
@@ -708,10 +718,14 @@
              A set of network simulation settings, enabled (and disabled) by PhotonPeer.IsSimulationEnabled.
              </summary>
              <remarks>
-             For performance reasons, the lag and jitter settings can't be produced exactly.
-             In some cases, the resulting lag will be up to 20ms bigger than the lag settings.
+             The simulation runs on a dedicated background thread that exists only while IsSimulationEnabled is true.
+             Outgoing and incoming packets are held in queues and delivered after the configured lag. The delay is
+             accurate to about 1-2ms; it may end up a few ms longer than configured, but not shorter.
              Even if all settings are 0, simulation will be used. Set PhotonPeer.IsSimulationEnabled
              to false to disable it if no longer needed.
+             As an optimization, a packet is passed through directly (not queued, and the background thread is not
+             involved) whenever the lag and jitter for its direction are both 0 and that direction's queue is empty.
+             A 0-lag/0-jitter setup therefore adds no delivery latency of its own; loss simulation still applies.
             
              All lag, jitter and loss is additional to the current, real network conditions.
              If the network is slow in reality, this will add even more lag.
@@ -719,6 +733,18 @@
              describe the medium lag even with jitter. The jitter influence is: [-jitter..+jitter].
              Packets "lost" due to OutgoingLossPercentage count for BytesOut and LostPackagesOut.
              Packets "lost" due to IncomingLossPercentage count for BytesIn and LostPackagesIn.
+            
+             Caveats:
+             Disconnecting temporarily turns the simulation off, so the disconnect command and any packets still queued
+             for sending are flushed to the socket immediately, without simulated lag or loss. This is necessary because
+             the socket is closed right after the disconnect is sent - a lag-delayed disconnect would be dropped.
+            
+             The simulation's background thread is torn down when the process exits. Any outgoing packets still waiting in
+             the lag queue at that point are not sent. To send pending data and a graceful disconnect on application quit,
+             set IsSimulationEnabled to false first (this flushes the queues synchronously), then Disconnect.
+            
+             Disabling the simulation flushes queued outgoing packets by sending them synchronously. If the operating
+             system's socket send buffer is full at that moment, some of that data may not be sent (it is dropped).
              </remarks>
         </member>
         <member name="F:Photon.Client.NetworkSimulationSet.isSimulationEnabled">
@@ -742,8 +768,30 @@
         <member name="F:Photon.Client.NetworkSimulationSet.incomingLossPercentage">
             <summary>internal</summary>
         </member>
+        <member name="F:Photon.Client.NetworkSimulationSet.netSimLock">
+            <summary>Guards isSimulationEnabled and the netSimThread lifecycle.</summary>
+        </member>
+        <member name="F:Photon.Client.NetworkSimulationSet.NetSimWakeEvent">
+            <summary>
+            Wakes the netSim thread from a timed wait. Signaled when an item is enqueued (so a sooner-due item is
+            noticed) and when simulation is disabled (so the thread exits promptly). AutoReset: one WaitOne consumes it.
+            </summary>
+        </member>
+        <member name="M:Photon.Client.NetworkSimulationSet.ShouldNetSimThreadExit">
+            <summary>
+            Called by the netSim thread at the top of each loop. Returns true (and releases ownership of the thread
+            field) when simulation was disabled, so the thread can exit and a later enable starts a fresh one.
+            </summary>
+        </member>
         <member name="P:Photon.Client.NetworkSimulationSet.IsSimulationEnabled">
             <summary>This setting overrides all other settings and turns simulation on/off. Default: false.</summary>
+        </member>
+        <member name="M:Photon.Client.NetworkSimulationSet.FlushQueuedItems">
+            <summary>
+            Delivers all queued items immediately (used when disabling simulation). Snapshots and clears each queue
+            under its lock, then processes outside the lock because ReceiveIncomingCommands / PhotonSocket.Send may
+            block or acquire other (higher) locks.
+            </summary>
         </member>
         <member name="P:Photon.Client.NetworkSimulationSet.OutgoingLag">
             <summary>Outgoing packages delay in ms. Default: 100.</summary>
@@ -1095,11 +1143,39 @@
             Please check the description of NetworkSimulationSet for more details.
             </summary>
         </member>
+        <member name="M:Photon.Client.PeerBase.NetworkSimQueueOrDeliver(System.Byte[],System.Collections.Generic.LinkedList{Photon.Client.SimulationItem},System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Shared tail of Send/ReceiveNetworkSimulated: applies lag and jitter, then either queues the packet for the
+            netSim thread to deliver later or - when there is no delay left to simulate (loss was already handled by
+            the caller) and the queue is empty - delivers it directly, keeping the background thread out of the path
+            for a 0-lag/0-jitter setup. The empty-queue condition preserves order: a direct delivery must not overtake
+            items still draining from a previously higher lag (which would corrupt the TCP byte stream).
+            <paramref name="outgoing"/> selects socket send vs. ReceiveIncomingCommands.
+            </summary>
+        </member>
         <member name="M:Photon.Client.PeerBase.NetworkSimRun">
             <summary>
-            Core of the Network Simulation, which is available in Debug builds.
-            Called by a timer in intervals.
+            Core of the Network Simulation, which is available in Debug builds. Runs on a dedicated thread that only
+            exists while simulation is enabled: it delivers items as they come due, then waits (releasing the CPU)
+            until the next item is due or an enqueue/disable wakes it.
             </summary>
+        </member>
+        <member name="M:Photon.Client.PeerBase.NetSimDeliverDue(System.Collections.Generic.LinkedList{Photon.Client.SimulationItem},System.Collections.Generic.List{Photon.Client.SimulationItem},System.Boolean)">
+            <summary>
+            Pops all currently-due items (stopwatch elapsed >= Delay) from the head of the given list under its lock,
+            then delivers them outside the lock (ReceiveIncomingCommands / PhotonSocket.Send may block or take other
+            locks). Order is preserved. <paramref name="dueItems"/> is a scratch buffer, cleared on entry.
+            </summary>
+        </member>
+        <member name="M:Photon.Client.PeerBase.NetSimTimeUntilNextDue">
+            <summary>
+            Milliseconds until the earliest-due item across both queues, measured on the same clock (per-item
+            stopwatch vs Delay) the delivery check uses. Returns 0 if something is already due and -1 if both queues
+            are empty.
+            </summary>
+        </member>
+        <member name="M:Photon.Client.PeerBase.NetSimHeadRemaining(System.Collections.Generic.LinkedList{Photon.Client.SimulationItem})">
+            <summary>Milliseconds until the head item of <paramref name="list"/> is due, or long.MaxValue if empty.</summary>
         </member>
         <member name="T:Photon.Client.PhotonPeer">
             <summary>
@@ -1417,8 +1493,10 @@
         <member name="P:Photon.Client.PhotonPeer.IsSimulationEnabled">
             <summary>
             Gets or sets the network simulation "enabled" setting.
-            Changing this value also locks this peer's sending and when setting false,
-            the internally used queues are executed (so setting to false can take some cycles).
+            Changing this value also locks this peer's sending. When setting false, the internally used queues are
+            flushed by sending/delivering them immediately (so setting to false can take some cycles); if the socket's
+            send buffer is full at that point, some queued outgoing data may be dropped.
+            See <see cref="T:Photon.Client.NetworkSimulationSet"/> remarks for the disconnect and application-quit caveats.
             </summary>
         </member>
         <member name="P:Photon.Client.PhotonPeer.NetworkSimulationSettings">

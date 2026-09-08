@@ -3,13 +3,28 @@ Photon C# Client Library - Changelog
 www.photonengine.com  -  Join our Discord Server: https://dashboard.photonengine.com/account/profile
 
 
+Version 5.1.18 (12. August 2026)
+    No notable changes.
+
+Version 5.1.17 (21. July 2026)
+    Added: Compile define being added to current build profile automatically in Unity: PHOTON_REALTIME_5_OR_NEWER.
+    Changed: Log (Debug level) for resent commands. This now includes the previous sent time.
+    Improved: Built in Network Simulation performance.
+    Changed: When NetworkSimulation gets disabled, the incoming and outgoing queues are copied/snapshot to minimize duration of related locks.
+    Changed: The network simulation thread now only spins for the last few milliseconds for precise timing. For longer pauses it can sleep until new datagrams are sent / arrive. It gets released when network simulation gets disabled.
+    Changed: Network Simulation has a shortcut to send/receive datagrams immediately if there is no lag (after checking loss).
+    Internal: Renamed outgoingAcknowledgementsPool to outgoingAcknowledgementsBuffer, which is very much how it works (buffer).
+    Added: Length of available data is being verified during command initialization, improving protection against malformed incoming data.
+    Changed: Connections with Datagram Encryption now skip over corrupted incoming datagrams as expected runtime issue. Currently counted as packetLossByCrc.
+    Fixed: VerifyConnect handling, skipping over the remaining bytes for the command.
+
 Version 5.1.16 (30. June 2026)
     No notable changes.
 
 Version 5.1.15 (18. June 2026)
     Updated: Internal locking for critical sections of the de/serialization and message handling. This fixes some rare issues but it was also possible to optimize existing locking.
     Note: Outgoing ACKs are generated at receive time, so this doesn't delay them. ACK side-effects stay on the send thread, where resends/send-window already lived.
-    Removed: EnetChannel.reliableCommandsInFlight. It was buggy (never decremented on the ACK2) and redundant with the sentReliableCommands scan.
+    Removed: EnetChannel.reliableCommandsInFlight. It was buggy (never decremented on the ACK2) and redundant with the sentReliableCommands scan.
     Changed: Split incoming ACKs from data commands in EnetPeer. New AckQueue for incoming ACKs is drained in SendOutgoingCommands. CommandQueue executed only on dispatch.
     Fixed: SendOutgoingCommands() to queue the Disconnect()-call in case of client timeout and to not send in Zombie state (client detected timeout but did not disconnect yet).
     Note: Timeout teardown now completes on the dispatch thread.
@@ -26,7 +41,7 @@ Version 5.1.15 (18. June 2026)
     Changed: Remaining size will now be checked when writing ACK2s. If there are a lot of channels (and loss) there might be more ACK2s than remaining space in a package. This keeps the remaining ACK2s for next package.
     Fixed: (Obsolete) SentReliableCommandsCount, which was accessing Stats.UdpReliableCommandsInFlight. You want to use the Stats directly but this was simply wrong.
 
-Version 5.1.14 (29. Mai 2026 - sha 81dc467)
+Version 5.1.14 (29. May 2026 - sha 81dc467)
     Updated: SocketUdp ignores most non-fatal UDP Socket errors.
     Updated: SocketUdp sets it's photonSocket.SocketErrorCode for sending and receiving errors (if available).
     Updated: SocketWebTcp handling of errors for WebSocket-sharp (non JavaScript / WebGL builds). While connected, all fatal errors are followed by OnClose. Errors while connecting are still treated as fatal (as there is no OnClose callback then).

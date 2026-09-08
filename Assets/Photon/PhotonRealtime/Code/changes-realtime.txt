@@ -3,6 +3,14 @@ Photon Realtime C# Client - Changelog
 www.photonengine.com  -  Join our Discord Server: https://dashboard.photonengine.com/account/profile
 
 
+Version 5.1.18 (12. August 2026)
+    Fixed: Internal method CallConnect() now changes the TransportProtocol before calling GetNameServerAddress(). Before this, an IP could be passed to the WebSocket as a race condition when using AuthMode AuthOnceWss.
+    Changed: MatchmakingExtensions to use UTC timestamp. The Unity Auditor was pointing out usages of DateTime.Now even if rarely used.
+
+Version 5.1.17 (21. July 2026)
+    Added: Realtime v5 for Unity now adds a compile define to the current build target on load: PHOTON_REALTIME_5_OR_NEWER.
+    Fixed: ConnectToNameserverAndWaitForRegionsAsync() was pinging all regions twice, which delayed getting the result.
+
 Version 5.1.16 (30. June 2026)
     Fixed: Merging to RoomInfo.customProperties only applies key-values for valid key types (string and int for Custom Properties).
 
