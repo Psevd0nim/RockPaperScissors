@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace MyProject
@@ -7,12 +8,15 @@ namespace MyProject
     public class PlayerName : MonoBehaviour
     {
         public TMP_InputField inputField;
-        public Image view;
+        public GameObject editIcon;
 
         private void Awake()
         {
-            inputField.onValueChanged.AddListener(SaveChangedValue);
             inputField.text = PlayerPrefs.GetString("PlayerName", "Player123");
+            inputField.onValueChanged.AddListener(SaveChangedValue);
+            inputField.onSelect.AddListener((value) => editIcon.SetActive(true));
+            inputField.onDeselect.AddListener((value) => editIcon.SetActive(false));
+            editIcon.SetActive(false);
         }
 
         private void SaveChangedValue(string value)
