@@ -13,15 +13,16 @@ namespace MyProject
         private void Awake()
         {
             inputField.text = PlayerPrefs.GetString("PlayerName", "Player123");
-            inputField.onValueChanged.AddListener(SaveChangedValue);
             inputField.onSelect.AddListener((value) => editIcon.SetActive(true));
             inputField.onDeselect.AddListener((value) => editIcon.SetActive(false));
+            inputField.onEndEdit.AddListener(SaveChangedValue);
             editIcon.SetActive(false);
         }
 
         private void SaveChangedValue(string value)
         {
             PlayerPrefs.SetString("PlayerName", value);
+            editIcon.SetActive(false);
         }
     }
 }

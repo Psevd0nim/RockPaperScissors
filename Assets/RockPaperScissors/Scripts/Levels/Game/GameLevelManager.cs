@@ -7,10 +7,12 @@ namespace MyProject
     {
         [SerializeField] private Game_UI_Manager _gameUIManager;
         [SerializeField] private NetworkGameManager _networkGameManager;
-        [SerializeField] private RpsRoundManager _rpsRoundManager;
+        [SerializeField] private RpsMatchManager _rpsRoundManager;
+        [SerializeField] private bool _needEnableOfflineMode;
 
         private FusionNetworkService _networkService;
         private bool _isExiting;
+        private bool _isOfflineMode;
 
         public override void Init(AppServices appServices)
         {
@@ -21,12 +23,20 @@ namespace MyProject
 
             _gameUIManager.MenuPressed += ExitToMenu;
             _networkGameManager.StateChanged += OnNetworkGameStateChanged;
+
+            _isOfflineMode = PlayerPrefs.GetInt(Constants.OfflineModeKey, 0) == 1;
+            _isOfflineMode = _needEnableOfflineMode;
         }
 
         public override void StartLevel()
         {
             _gameUIManager.OpenTransition();
-            _networkGameManager.StartNetworkSession();
+            if(_isOfflineMode)
+            {
+
+            }
+            else
+                _networkGameManager.StartNetworkSession();
         }
 
         private void OnNetworkGameStateChanged(NetworkGameState state)

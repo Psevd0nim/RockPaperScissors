@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MyProject
 {
-    public class RpsRoundManager : MonoBehaviour
+    public class RpsMatchManager : MonoBehaviour
     {
         public bool IsMatchActive { get; private set; }
 
@@ -30,6 +30,11 @@ namespace MyProject
 
             _gameUI.ShowGame(localPlayerEntity.Nickname, opponentPlayerEntity.Nickname);
             UpdateScores();
+        }
+
+        public void StartOfflineMatch()
+        {
+            _gameUI.ShowGame("Player", "Bot");
         }
 
         public void EndMatch()

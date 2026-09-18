@@ -7,5 +7,6 @@ namespace MyProject
         public const string PrefabsConfigPath = "PrefabsConfig";
         public const string SoundVolumeKey = "Volume";
         public const string SaveDataKey = "SaveKey";
+        public const string OfflineModeKey = "OfflineMode";
     }
 }
