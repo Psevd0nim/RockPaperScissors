@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2f73eb7dcaf914daae044186561009, type: 3}
   m_Name: PrefabsConfig
   m_EditorClassIdentifier: Assembly-CSharp::MyProject.PrefabsConfig
-  skillBallForCollectorPrefab: {fileID: 7876453166233465295, guid: 630e01e55f7ccb345803e57f7acfe277, type: 3}
-  skillBallForBattlePrefab: {fileID: 2147889269636587996, guid: 2b90a1a3c3a748842b114b6cc84aa0d0, type: 3}
-  deathBallParticleDefault: {fileID: 2393111809793729749, guid: 9da8b44f43419434085586ce34a46f4f, type: 3}
+  playerPrefab: {fileID: 143471980462521404, guid: fa09caad4436fe04c8d018cbfbc92398, type: 3}

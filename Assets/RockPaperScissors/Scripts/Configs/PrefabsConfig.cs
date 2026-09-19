@@ -5,6 +5,6 @@ namespace MyProject
     [CreateAssetMenu]
     public class PrefabsConfig : ScriptableObject
     {
-        
+        public NetworkPlayerEntity playerPrefab;
     }
 }

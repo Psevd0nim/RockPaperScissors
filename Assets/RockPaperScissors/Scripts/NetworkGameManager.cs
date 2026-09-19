@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Fusion;
 using UnityEngine;
 
@@ -13,22 +14,24 @@ namespace MyProject
         ConnectionFailed
     }
 
-    public class NetworkGameManager : NetworkBehaviour
+    public class NetworkGameManager : MonoBehaviour
     {
-        public event Action<NetworkGameState> StateChanged;
-
         public NetworkGameState State { get; private set; } = NetworkGameState.NotStarted;
         public NetworkPlayerEntity LocalPlayerEntity { get; private set; }
         public NetworkPlayerEntity OpponentPlayerEntity { get; private set; }
         public int PlayersCount => _networkService.Players.Count;
 
-        [SerializeField] private NetworkPlayerEntity _playerEntityPrefab;
+        [SerializeField] private PlayerSpawner _playerSpawner;
 
         private FusionNetworkService _networkService;
+        private Game_UI_Manager _gameUIManager;
+        private RpsMatchManager _rpsMatchManager;
 
-        public void Init(FusionNetworkService networkService)
+        public void Init(FusionNetworkService networkService, Game_UI_Manager gameUIManager, RpsMatchManager rpsRoundManager)
         {
             _networkService = networkService;
+            _gameUIManager = gameUIManager;
+            _rpsMatchManager = rpsRoundManager;
             _networkService.PlayersChanged += TryUpdateMatchState;
             _networkService.PlayerEntitiesChanged += TryUpdateMatchState;
         }
@@ -38,6 +41,7 @@ namespace MyProject
             ChangeState(NetworkGameState.Connecting);
 
             StartGameResult startGameResult = await _networkService.StartGameSessionAsync();
+            _networkService.Runner.AddGlobal(_playerSpawner);
 
             if (startGameResult.Ok == false)
             {
@@ -48,20 +52,60 @@ namespace MyProject
             }
         }
 
-        public override void Spawned()
+        public async Task ShutdownNetworkSession()
         {
-            NetworkPlayerEntity localPlayerEntity = Runner.Spawn(_playerEntityPrefab);
-            Runner.SetPlayerObject(Runner.LocalPlayer, localPlayerEntity.Object);
+            try
+            {
+                await _networkService.ShutdownGameSessionAsync();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception);
+            }
+        }
 
-            LocalPlayerEntity = localPlayerEntity;
+        private void NetworkGameStateChanged(NetworkGameState state)
+        {
+            _gameUIManager.ShowPlayersCount(PlayersCount);
 
-            TryUpdateMatchState();
+            switch (state)
+            {
+                case NetworkGameState.Connecting:
+                    _gameUIManager.ShowConnectingIndicator();
+                    break;
+                case NetworkGameState.WaitingForOpponent:
+                    _gameUIManager.HideConnectingIndicator();
+
+                    if (_rpsMatchManager.IsMatchActive)
+                        _rpsMatchManager.EndMatch();
+
+                    _gameUIManager.ShowLocalPlayer(LocalPlayerEntity.Nickname);
+                    _gameUIManager.ShowWaitingForOpponent();
+                    break;
+                case NetworkGameState.ReadyToPlay:
+                    _gameUIManager.HideConnectingIndicator();
+                    _rpsMatchManager.StartMatch(LocalPlayerEntity, OpponentPlayerEntity);
+                    break;
+                case NetworkGameState.ConnectionFailed:
+                    _gameUIManager.HideConnectingIndicator();
+                    _gameUIManager.ShowConnectionFailed();
+                    break;
+            }
         }
 
         private void TryUpdateMatchState()
         {
             if (LocalPlayerEntity == null)
-                return;
+            {
+                if (_networkService.TryGetNetworkPlayerEntity(_networkService.LocalPlayer, out NetworkPlayerEntity localPlayerEntity))
+                {
+                    LocalPlayerEntity = localPlayerEntity;
+                }
+                else
+                {
+                    return;
+                }
+            }
 
             if (TryFindOpponent(out PlayerRef opponentPlayer) == false)
             {
@@ -98,7 +142,7 @@ namespace MyProject
                 return;
 
             State = state;
-            StateChanged?.Invoke(State);
+            NetworkGameStateChanged(State);
         }
 
         private void OnDestroy()

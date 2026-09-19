@@ -25,12 +25,19 @@ namespace MyProject
         [Networked]
         public string Nickname { get; set; }
 
+        public bool IsReady => SelectedElement != RPSElementType.None;
+
         public override void Spawned()
         {
             if (HasStateAuthority == false)
                 return;
 
-            Nickname = PlayerPrefs.GetString("PlayerName", "Player123");
+            SetNickname(PlayerPrefs.GetString("PlayerName", "Player123"));
+        }
+
+        public void SetNickname(string nickname)
+        {
+            Nickname = nickname;
         }
 
         public void AfterSpawned()
@@ -66,6 +73,11 @@ namespace MyProject
 
         private void NotifySelectedElementChanged()
         {
+            if(SelectedElement == RPSElementType.None)
+            {
+                return;
+            }
+
             SelectedElementChanged?.Invoke();
         }
 

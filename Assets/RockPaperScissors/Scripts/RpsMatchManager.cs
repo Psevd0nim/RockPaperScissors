@@ -11,30 +11,28 @@ namespace MyProject
         private NetworkPlayerEntity _localPlayerEntity;
         private NetworkPlayerEntity _opponentPlayerEntity;
 
+        private bool _isOfflineMode;
+
         public void Init(Game_UI_Manager gameUI)
         {
             _gameUI = gameUI;
         }
 
-        public void StartMatch(NetworkPlayerEntity localPlayerEntity, NetworkPlayerEntity opponentPlayerEntity)
+        public void StartMatch(NetworkPlayerEntity localPlayerEntity, NetworkPlayerEntity opponentPlayerEntity, bool isOfflineMode = false)
         {
             _localPlayerEntity = localPlayerEntity;
             _opponentPlayerEntity = opponentPlayerEntity;
+            _isOfflineMode = isOfflineMode;
             IsMatchActive = true;
 
             _gameUI.ElementSelected += SelectElement;
-            _localPlayerEntity.SelectedElementChanged += UpdateRoundState;
-            _opponentPlayerEntity.SelectedElementChanged += UpdateRoundState;
+            _localPlayerEntity.SelectedElementChanged += TryStartRoundFight;
+            _opponentPlayerEntity.SelectedElementChanged += TryStartRoundFight;
             _localPlayerEntity.ScoreChanged += UpdateScores;
             _opponentPlayerEntity.ScoreChanged += UpdateScores;
 
             _gameUI.ShowGame(localPlayerEntity.Nickname, opponentPlayerEntity.Nickname);
             UpdateScores();
-        }
-
-        public void StartOfflineMatch()
-        {
-            _gameUI.ShowGame("Player", "Bot");
         }
 
         public void EndMatch()
@@ -46,12 +44,12 @@ namespace MyProject
             StopAllCoroutines();
 
             _gameUI.ElementSelected -= SelectElement;
-            _localPlayerEntity.SelectedElementChanged -= UpdateRoundState;
+            _localPlayerEntity.SelectedElementChanged -= TryStartRoundFight;
             _localPlayerEntity.ScoreChanged -= UpdateScores;
 
             if (_opponentPlayerEntity != null)
             {
-                _opponentPlayerEntity.SelectedElementChanged -= UpdateRoundState;
+                _opponentPlayerEntity.SelectedElementChanged -= TryStartRoundFight;
                 _opponentPlayerEntity.ScoreChanged -= UpdateScores;
             }
 
@@ -67,15 +65,17 @@ namespace MyProject
             _gameUI.ShowLocalSelectedElement(elementType);
         }
 
-        private void UpdateRoundState()
+        private void TryStartRoundFight()
         {
-            bool bothElementsSelected = _localPlayerEntity.SelectedElement != RPSElementType.None && _opponentPlayerEntity.SelectedElement != RPSElementType.None;
-            bool bothElementsAreReset = _localPlayerEntity.SelectedElement == RPSElementType.None && _opponentPlayerEntity.SelectedElement == RPSElementType.None;
+            if (_isOfflineMode)
+            {
+                _opponentPlayerEntity.SetSelectedElement((RPSElementType)Random.Range(1, 4));
+            }
 
-            if (bothElementsSelected)
+            if (_localPlayerEntity.IsReady && _opponentPlayerEntity.IsReady)
                 StartCoroutine(ShowRoundResult());
-            else if (bothElementsAreReset)
-                _gameUI.ShowElementSelection();
+            else if (_localPlayerEntity.IsReady && !_opponentPlayerEntity.IsReady)
+                _gameUI.ShowLocalSelectedElement(_localPlayerEntity.SelectedElement);
         }
 
         private IEnumerator ShowRoundResult()
@@ -84,6 +84,11 @@ namespace MyProject
 
             if (result == RpsRoundResult.Win)
                 _localPlayerEntity.AddPoint();
+            else if (result == RpsRoundResult.Lose && _isOfflineMode)
+            {
+                _opponentPlayerEntity.AddPoint();
+                UpdateScores();
+            }
 
             _gameUI.ShowRound(_localPlayerEntity.SelectedElement, _opponentPlayerEntity.SelectedElement, result);
 

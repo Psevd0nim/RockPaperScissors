@@ -7,8 +7,9 @@ namespace MyProject
     {
         [SerializeField] private Game_UI_Manager _gameUIManager;
         [SerializeField] private NetworkGameManager _networkGameManager;
-        [SerializeField] private RpsMatchManager _rpsRoundManager;
-        [SerializeField] private bool _needEnableOfflineMode;
+        [SerializeField] private RpsMatchManager _rpsMatchManager;
+        [SerializeField] private Factory _factory;
+        [SerializeField] private bool _enableOfflineMode;
 
         private FusionNetworkService _networkService;
         private bool _isExiting;
@@ -17,15 +18,16 @@ namespace MyProject
         public override void Init(AppServices appServices)
         {
             _gameUIManager.Init(appServices.AudioManager);
-            _rpsRoundManager.Init(_gameUIManager);
+            _rpsMatchManager.Init(_gameUIManager);
             _networkService = appServices.NetworkService;
-            _networkGameManager.Init(_networkService);
+            _networkGameManager.Init(_networkService, _gameUIManager, _rpsMatchManager);
 
             _gameUIManager.MenuPressed += ExitToMenu;
-            _networkGameManager.StateChanged += OnNetworkGameStateChanged;
 
-            _isOfflineMode = PlayerPrefs.GetInt(Constants.OfflineModeKey, 0) == 1;
-            _isOfflineMode = _needEnableOfflineMode;
+            if (_enableOfflineMode)
+                _isOfflineMode = true;
+            else
+                _isOfflineMode = PlayerPrefs.GetInt(Constants.OfflineModeKey, 0) == 1;
         }
 
         public override void StartLevel()
@@ -33,39 +35,16 @@ namespace MyProject
             _gameUIManager.OpenTransition();
             if(_isOfflineMode)
             {
+                NetworkPlayerEntity localPlayerEntity = _factory.CreateNetworkPlayerEntity();
+                localPlayerEntity.SetNickname(PlayerPrefs.GetString("PlayerName", "Player123"));
 
+                NetworkPlayerEntity opponentPlayerEntity = _factory.CreateNetworkPlayerEntity();
+                opponentPlayerEntity.SetNickname("Bot");
+
+                _rpsMatchManager.StartMatch(localPlayerEntity, opponentPlayerEntity, isOfflineMode: true);
             }
             else
                 _networkGameManager.StartNetworkSession();
-        }
-
-        private void OnNetworkGameStateChanged(NetworkGameState state)
-        {
-            _gameUIManager.ShowPlayersCount(_networkGameManager.PlayersCount);
-
-            switch (state)
-            {
-                case NetworkGameState.Connecting:
-                    _gameUIManager.ShowConnectingIndicator();
-                    break;
-                case NetworkGameState.WaitingForOpponent:
-                    _gameUIManager.HideConnectingIndicator();
-
-                    if (_rpsRoundManager.IsMatchActive)
-                        _rpsRoundManager.EndMatch();
-
-                    _gameUIManager.ShowLocalPlayer(_networkGameManager.LocalPlayerEntity.Nickname);
-                    _gameUIManager.ShowWaitingForOpponent();
-                    break;
-                case NetworkGameState.ReadyToPlay:
-                    _gameUIManager.HideConnectingIndicator();
-                    _rpsRoundManager.StartMatch(_networkGameManager.LocalPlayerEntity, _networkGameManager.OpponentPlayerEntity);
-                    break;
-                case NetworkGameState.ConnectionFailed:
-                    _gameUIManager.HideConnectingIndicator();
-                    _gameUIManager.ShowConnectionFailed();
-                    break;
-            }
         }
 
         private async void ExitToMenu()
@@ -76,14 +55,7 @@ namespace MyProject
             _isExiting = true;
             _gameUIManager.CloseTransition();
 
-            try
-            {
-                await _networkService.ShutdownGameSessionAsync();
-            }
-            catch (Exception exception)
-            {
-                Debug.LogException(exception);
-            }
+            await _networkGameManager.ShutdownNetworkSession();
 
             OnExitLevel?.Invoke(this, Constants.MenuSceneName, 1.2f);
         }
@@ -91,9 +63,6 @@ namespace MyProject
         private void OnDestroy()
         {
             _gameUIManager.MenuPressed -= ExitToMenu;
-
-            if (_networkGameManager != null)
-                _networkGameManager.StateChanged -= OnNetworkGameStateChanged;
         }
     }
 }

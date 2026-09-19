@@ -13,6 +13,7 @@ namespace MyProject
         public event Action PlayersChanged;
         public event Action PlayerEntitiesChanged;
 
+        public NetworkRunner Runner => _runner;
         public List<PlayerRef> Players => _players;
         public PlayerRef LocalPlayer => _runner != null ? _runner.LocalPlayer : PlayerRef.None;
 
