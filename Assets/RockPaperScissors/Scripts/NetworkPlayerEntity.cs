@@ -29,11 +29,13 @@ namespace MyProject
 
         public override void Spawned()
         {
+            Debug.Log("Spawned NetworkPlayerEntity");
             PlayerRegistry.Instance.AddPlayerEntity(this);
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
+            Debug.Log("Despawned NetworkPlayerEntity");
             PlayerRegistry.Instance.RemovePlayerEntity(this);
         }
 

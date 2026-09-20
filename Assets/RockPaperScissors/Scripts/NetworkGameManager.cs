@@ -54,6 +54,11 @@ namespace MyProject
                 return;
             }
 
+            _networkService.OnSceneLoaded += TrySpawnPlayers;
+        }
+
+        private void TrySpawnPlayers()
+        {
             NetworkRunner runner = _networkService.Runner;
 
             LocalPlayerEntity = _factory.SpawnLocalPlayer(runner);
@@ -166,6 +171,7 @@ namespace MyProject
         {
             _networkService.PlayersChanged -= TryUpdateMatchState;
             _networkService.PlayerEntitiesChanged -= TryUpdateMatchState;
+            _networkService.OnSceneLoaded -= TrySpawnPlayers;
         }
     }
 }

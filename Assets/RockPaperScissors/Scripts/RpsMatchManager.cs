@@ -67,34 +67,45 @@ namespace MyProject
 
         private void TryStartRoundFight()
         {
-            if (_isOfflineMode)
+            if (_localPlayerEntity.IsReady)
             {
-                _opponentPlayerEntity.SetSelectedElement((RPSElementType)Random.Range(1, 4));
+                if (_opponentPlayerEntity.IsReady)
+                    StartCoroutine(ShowRoundResult()); 
+                else
+                {
+                    if (_isOfflineMode)
+                        _opponentPlayerEntity.SetSelectedElement((RPSElementType)Random.Range(1, 4));
+                    else
+                        _gameUI.ShowLocalSelectedElement(_localPlayerEntity.SelectedElement);
+                }
             }
-
-            if (_localPlayerEntity.IsReady && _opponentPlayerEntity.IsReady)
-                StartCoroutine(ShowRoundResult());
-            else if (_localPlayerEntity.IsReady && !_opponentPlayerEntity.IsReady)
-                _gameUI.ShowLocalSelectedElement(_localPlayerEntity.SelectedElement);
         }
 
         private IEnumerator ShowRoundResult()
         {
             RpsRoundResult result = GetRoundResult(_localPlayerEntity.SelectedElement, _opponentPlayerEntity.SelectedElement);
-
-            if (result == RpsRoundResult.Win)
-                _localPlayerEntity.AddPoint();
-            else if (result == RpsRoundResult.Lose && _isOfflineMode)
+            switch (result)
             {
-                _opponentPlayerEntity.AddPoint();
-                UpdateScores();
+                case RpsRoundResult.Win:
+                    _localPlayerEntity.AddPoint();
+                    break;
+                case RpsRoundResult.Lose:
+                    if (_isOfflineMode)
+                        _opponentPlayerEntity.AddPoint();
+                    break;
             }
+            UpdateScores();
 
             _gameUI.ShowRound(_localPlayerEntity.SelectedElement, _opponentPlayerEntity.SelectedElement, result);
 
             yield return new WaitForSeconds(2f);
 
             _localPlayerEntity.ResetSelectedElement();
+
+            if (_isOfflineMode)
+                _opponentPlayerEntity.ResetSelectedElement();
+
+            _gameUI.ShowElementSelection();
         }
 
         private void UpdateScores()

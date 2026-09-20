@@ -1408,26 +1408,7 @@ MonoBehaviour:
   _networkGameManager: {fileID: 1467217600}
   _rpsMatchManager: {fileID: 1463766594}
   _factory: {fileID: 1804226524}
-  _enableOfflineMode: 0
---- !u!114 &1467217599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1467217601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 24862662
-  SendPriority: 1
-  EnableInterpolation: 1
-  Flags: 2
-  NestedObjects: []
-  NetworkedBehaviours: []
-  ForceRemoteRenderTimeframe: 0
+  _enableOfflineMode: 1
 --- !u!114 &1467217600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1449,7 +1430,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1467217602}
-  - component: {fileID: 1467217599}
   - component: {fileID: 1467217600}
   m_Layer: 0
   m_Name: NetworkGameManager

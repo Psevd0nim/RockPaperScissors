@@ -12,6 +12,7 @@ namespace MyProject
     {
         public event Action PlayersChanged;
         public event Action PlayerEntitiesChanged;
+        public event Action OnSceneLoaded;
 
         public NetworkRunner Runner => _runner;
         public List<PlayerRef> Players => _players;
@@ -120,6 +121,11 @@ namespace MyProject
             _runner = null;
         }
 
+        public void OnSceneLoadDone(NetworkRunner runner)
+        {
+            OnSceneLoaded?.Invoke();
+        }
+
         #region UnusedCallbacks
         public void OnConnectedToServer(NetworkRunner runner)
         {
@@ -166,10 +172,6 @@ namespace MyProject
         }
 
         public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ReadOnlySpan<byte> data)
-        {
-        }
-
-        public void OnSceneLoadDone(NetworkRunner runner)
         {
         }
 

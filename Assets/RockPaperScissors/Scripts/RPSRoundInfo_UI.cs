@@ -47,17 +47,6 @@ namespace MyProject
             HideRoundControls();
         }
 
-        public void ShowPreparingPlayers(string localPlayerName, string opponentPlayerName)
-        {
-            _localPlayerName = GetDisplayedName(localPlayerName);
-            _opponentPlayerName = GetDisplayedName(opponentPlayerName);
-
-            gameObject.SetActive(true);
-            _localPlayerText.text = $"YOU\n{_localPlayerName}\nScore: 0";
-            _opponentPlayerText.text = $"OPPONENT\n{_opponentPlayerName}\nPreparing...";
-            HideRoundControls();
-        }
-
         public void Show(string localPlayerName, string opponentPlayerName)
         {
             _localPlayerName = GetDisplayedName(localPlayerName);
