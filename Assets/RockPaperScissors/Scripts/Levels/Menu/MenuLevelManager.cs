@@ -10,6 +10,7 @@ namespace MyProject
         {
             _menuLevel_UI_Manager.Init(appServices.AudioManager);
             _menuLevel_UI_Manager.OnPlayPressed += AfterPlayPressed;
+            _menuLevel_UI_Manager.OnVsBotPressed += AfterVsBotPressed;
         }
 
         public override void StartLevel()
@@ -22,6 +23,19 @@ namespace MyProject
             _menuLevel_UI_Manager.DisablePlayButton();
             _menuLevel_UI_Manager.CloseTransition();
             OnExitLevel?.Invoke(this, Constants.GameSceneName, 1.2f);
+        }
+
+        private void AfterVsBotPressed()
+        {
+            PlayerPrefs.SetInt(Constants.OfflineModeKey, 1);
+            _menuLevel_UI_Manager.CloseTransition();
+            OnExitLevel?.Invoke(this, Constants.GameSceneName, 1.2f);
+        }
+
+        private void OnDestroy()
+        {
+            _menuLevel_UI_Manager.OnPlayPressed -= AfterPlayPressed;
+            _menuLevel_UI_Manager.OnVsBotPressed -= AfterVsBotPressed;
         }
     }
 }

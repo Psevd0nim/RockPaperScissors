@@ -1,3 +1,4 @@
+using Fusion;
 using System;
 using UnityEngine;
 
@@ -20,31 +21,23 @@ namespace MyProject
             _gameUIManager.Init(appServices.AudioManager);
             _rpsMatchManager.Init(_gameUIManager);
             _networkService = appServices.NetworkService;
-            _networkGameManager.Init(_networkService, _gameUIManager, _rpsMatchManager);
+            _networkGameManager.Init(_networkService, _gameUIManager, _rpsMatchManager, _factory);
 
             _gameUIManager.MenuPressed += ExitToMenu;
 
             if (_enableOfflineMode)
                 _isOfflineMode = true;
             else
+            {
                 _isOfflineMode = PlayerPrefs.GetInt(Constants.OfflineModeKey, 0) == 1;
+                PlayerPrefs.SetInt(Constants.OfflineModeKey, 0);
+            }
         }
 
         public override void StartLevel()
         {
             _gameUIManager.OpenTransition();
-            if(_isOfflineMode)
-            {
-                NetworkPlayerEntity localPlayerEntity = _factory.CreateNetworkPlayerEntity();
-                localPlayerEntity.SetNickname(PlayerPrefs.GetString("PlayerName", "Player123"));
-
-                NetworkPlayerEntity opponentPlayerEntity = _factory.CreateNetworkPlayerEntity();
-                opponentPlayerEntity.SetNickname("Bot");
-
-                _rpsMatchManager.StartMatch(localPlayerEntity, opponentPlayerEntity, isOfflineMode: true);
-            }
-            else
-                _networkGameManager.StartNetworkSession();
+            _networkGameManager.StartNetworkSession(_isOfflineMode ? GameMode.Single : GameMode.Shared);
         }
 
         private async void ExitToMenu()

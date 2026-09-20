@@ -6,13 +6,16 @@ namespace MyProject
     public class MenuLevel_UI_Manager : UI_Manager
     {
         public event Action OnPlayPressed;
+        public event Action OnVsBotPressed;
 
         [SerializeField] private Button_UI _playButton;
+        [SerializeField] private Button_UI _vsBotButton;
 
         public override void Init(AudioManager audioManager)
         {
             base.Init(audioManager);
             _playButton.OnPressed += AfterPlayButtonPressed;
+            _vsBotButton.OnPressed += AfterVsBotButtonPressed;
         }
 
         private void AfterPlayButtonPressed()
@@ -20,15 +23,20 @@ namespace MyProject
             OnPlayPressed?.Invoke();
         }
 
+        private void AfterVsBotButtonPressed()
+        {
+            OnVsBotPressed?.Invoke();
+        }
+
         public void DisablePlayButton()
         {
-            //_playButton.gameObject.SetActive(false);
             _playButton.SetInteractableStatus(false);
         }
 
         private void OnDestroy()
         {
             _playButton.OnPressed -= AfterPlayButtonPressed;
+            _vsBotButton.OnPressed -= AfterVsBotButtonPressed;
         }
     }
 }

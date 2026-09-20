@@ -1408,7 +1408,7 @@ MonoBehaviour:
   _networkGameManager: {fileID: 1467217600}
   _rpsMatchManager: {fileID: 1463766594}
   _factory: {fileID: 1804226524}
-  _enableOfflineMode: 1
+  _enableOfflineMode: 0
 --- !u!114 &1467217599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1440,7 +1440,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 568a28f54ff54e3b8c96d8092cbab711, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyProject.NetworkGameManager
-  _playerSpawner: {fileID: 1828471255}
 --- !u!1 &1467217601
 GameObject:
   m_ObjectHideFlags: 0
@@ -1764,7 +1763,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyProject.Factory
   _prefabsConfig: {fileID: 11400000, guid: 07e62ff7fd41d7541891d62e12d986cd, type: 2}
-  _playerPrefab: {fileID: 149631529350670514, guid: fa09caad4436fe04c8d018cbfbc92398, type: 3}
 --- !u!4 &1804226525
 Transform:
   m_ObjectHideFlags: 0
@@ -1779,51 +1777,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1176992220}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1828471253
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1828471256}
-  - component: {fileID: 1828471255}
-  m_Layer: 0
-  m_Name: PlayerSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1828471255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1828471253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e954c1ae67992c449b40d0783011c37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MyProject.PlayerSpawner
-  _prefabsConfig: {fileID: 11400000, guid: 07e62ff7fd41d7541891d62e12d986cd, type: 2}
---- !u!4 &1828471256
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1828471253}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1945656929 stripped
 RectTransform:
@@ -3022,4 +2975,3 @@ SceneRoots:
   - {fileID: 1349386395}
   - {fileID: 1176992220}
   - {fileID: 560023636}
-  - {fileID: 1828471256}

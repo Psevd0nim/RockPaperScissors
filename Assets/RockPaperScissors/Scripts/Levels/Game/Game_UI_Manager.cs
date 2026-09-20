@@ -35,7 +35,13 @@ namespace MyProject
 
         public void ShowPlayersCount(int playersCount)
         {
+            _countPlayersText.gameObject.SetActive(true);
             _countPlayersText.text = $"Players: {playersCount}";
+        }
+
+        public void HidePlayersCount()
+        {
+            _countPlayersText.gameObject.SetActive(false);
         }
 
         public void ShowConnectingIndicator()

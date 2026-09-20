@@ -21,27 +21,29 @@ namespace MyProject
         public NetworkPlayerEntity OpponentPlayerEntity { get; private set; }
         public int PlayersCount => _networkService.Players.Count;
 
-        [SerializeField] private PlayerSpawner _playerSpawner;
-
         private FusionNetworkService _networkService;
         private Game_UI_Manager _gameUIManager;
         private RpsMatchManager _rpsMatchManager;
+        private GameMode _gameMode;
+        private Factory _factory;
 
-        public void Init(FusionNetworkService networkService, Game_UI_Manager gameUIManager, RpsMatchManager rpsRoundManager)
+        public void Init(FusionNetworkService networkService, Game_UI_Manager gameUIManager, RpsMatchManager rpsRoundManager, Factory factory)
         {
             _networkService = networkService;
             _gameUIManager = gameUIManager;
             _rpsMatchManager = rpsRoundManager;
+            _factory = factory;
             _networkService.PlayersChanged += TryUpdateMatchState;
             _networkService.PlayerEntitiesChanged += TryUpdateMatchState;
         }
 
-        public async void StartNetworkSession()
+        public async void StartNetworkSession(GameMode gameMode)
         {
+            _gameMode = gameMode;
+
             ChangeState(NetworkGameState.Connecting);
 
-            StartGameResult startGameResult = await _networkService.StartGameSessionAsync();
-            _networkService.Runner.AddGlobal(_playerSpawner);
+            StartGameResult startGameResult = await _networkService.StartGameSessionAsync(gameMode);
 
             if (startGameResult.Ok == false)
             {
@@ -49,7 +51,19 @@ namespace MyProject
                 Debug.Log($"StartGameResult.ErrorMessage: \"{startGameResult.ErrorMessage}\"");
 
                 ChangeState(NetworkGameState.ConnectionFailed);
+                return;
             }
+
+            NetworkRunner runner = _networkService.Runner;
+
+            LocalPlayerEntity = _factory.SpawnLocalPlayer(runner);
+
+            if (_gameMode == GameMode.Single)
+            {
+                OpponentPlayerEntity = _factory.SpawnBot(runner);
+            }
+
+            TryUpdateMatchState();
         }
 
         public async Task ShutdownNetworkSession()
@@ -66,7 +80,10 @@ namespace MyProject
 
         private void NetworkGameStateChanged(NetworkGameState state)
         {
-            _gameUIManager.ShowPlayersCount(PlayersCount);
+            if (_gameMode == GameMode.Single)
+                _gameUIManager.HidePlayersCount();
+            else
+                _gameUIManager.ShowPlayersCount(PlayersCount);
 
             switch (state)
             {
@@ -84,7 +101,7 @@ namespace MyProject
                     break;
                 case NetworkGameState.ReadyToPlay:
                     _gameUIManager.HideConnectingIndicator();
-                    _rpsMatchManager.StartMatch(LocalPlayerEntity, OpponentPlayerEntity);
+                    _rpsMatchManager.StartMatch(LocalPlayerEntity, OpponentPlayerEntity, isOfflineMode: _gameMode == GameMode.Single);
                     break;
                 case NetworkGameState.ConnectionFailed:
                     _gameUIManager.HideConnectingIndicator();
@@ -96,15 +113,15 @@ namespace MyProject
         private void TryUpdateMatchState()
         {
             if (LocalPlayerEntity == null)
+                return;
+
+            if (_gameMode == GameMode.Single)
             {
-                if (_networkService.TryGetNetworkPlayerEntity(_networkService.LocalPlayer, out NetworkPlayerEntity localPlayerEntity))
-                {
-                    LocalPlayerEntity = localPlayerEntity;
-                }
-                else
-                {
+                if (OpponentPlayerEntity == null)
                     return;
-                }
+
+                ChangeState(NetworkGameState.ReadyToPlay);
+                return;
             }
 
             if (TryFindOpponent(out PlayerRef opponentPlayer) == false)

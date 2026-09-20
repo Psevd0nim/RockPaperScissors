@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Fusion;
+using UnityEngine;
 
 namespace MyProject
 {
@@ -6,11 +7,24 @@ namespace MyProject
     {
         [SerializeField] private PrefabsConfig _prefabsConfig;
 
-        [SerializeField] private NetworkPlayerEntity _playerPrefab;
-
-        public NetworkPlayerEntity CreateNetworkPlayerEntity()
+        public NetworkPlayerEntity SpawnLocalPlayer(NetworkRunner runner)
         {
-            return Instantiate(_prefabsConfig.playerPrefab);
+            NetworkPlayerEntity player = runner.Spawn(_prefabsConfig.playerPrefab);
+
+            player.SetNickname(PlayerPrefs.GetString("PlayerName", "Player123"));
+
+            runner.SetPlayerObject(runner.LocalPlayer, player.Object);
+
+            return player;
+        }
+
+        public NetworkPlayerEntity SpawnBot(NetworkRunner runner)
+        {
+            NetworkPlayerEntity bot = runner.Spawn(_prefabsConfig.playerPrefab);
+
+            bot.SetNickname("Bot");
+
+            return bot;
         }
     }
 }
