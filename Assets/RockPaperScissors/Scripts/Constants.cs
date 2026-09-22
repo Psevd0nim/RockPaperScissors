@@ -8,5 +8,6 @@ namespace MyProject
         public const string SoundVolumeKey = "Volume";
         public const string SaveDataKey = "SaveKey";
         public const string OfflineModeKey = "OfflineMode";
+        public const string RoomCodeKey = "RoomCodeKey";
     }
 }

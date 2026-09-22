@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Fusion;
+using Fusion.Menu;
 using UnityEngine;
 
 namespace MyProject
@@ -43,7 +44,11 @@ namespace MyProject
 
             ChangeState(NetworkGameState.Connecting);
 
-            StartGameResult startGameResult = await _networkService.StartGameSessionAsync(gameMode);
+            string roomCode = PlayerPrefs.GetString(Constants.RoomCodeKey, string.Empty);
+            if (roomCode == string.Empty)
+                roomCode = "123";
+
+            StartGameResult startGameResult = await _networkService.StartGameSessionAsync(gameMode, roomCode);
 
             if (startGameResult.Ok == false)
             {

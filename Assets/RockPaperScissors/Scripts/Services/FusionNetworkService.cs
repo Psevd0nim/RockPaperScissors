@@ -29,7 +29,7 @@ namespace MyProject
             _playerRegistry.OnPlayerEntitiesChanged += AfterPlayerEntitiesChanged;
         }
 
-        public async Task<StartGameResult> StartGameSessionAsync(GameMode gameMode)
+        public async Task<StartGameResult> StartGameSessionAsync(GameMode gameMode, string roomCode)
         {
             GameObject runnerObject = new GameObject("NetworkRunner");
             _runner = runnerObject.AddComponent<NetworkRunner>();
@@ -42,7 +42,7 @@ namespace MyProject
             StartGameArgs args = new StartGameArgs
             {
                 GameMode = gameMode,
-                SessionName = "Test Room",
+                SessionName = roomCode,
                 PlayerCount = 2,
                 Scene = sceneInfo
             };
