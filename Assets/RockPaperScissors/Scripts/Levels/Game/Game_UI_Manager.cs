@@ -9,6 +9,8 @@ namespace MyProject
         public event Action<RPSElementType> ElementSelected;
         public event Action MenuPressed;
 
+        public SessionInfo_UI SessionInfoUI => _sessionInfoUI;
+
         [SerializeField] private ConnectingIndicator _connectingIndicator;
         [SerializeField] private TextMeshProUGUI _countPlayersText;
         [SerializeField] private TextMeshProUGUI _statusText;
@@ -16,6 +18,14 @@ namespace MyProject
         [SerializeField] private GameObject _pausePanel;
         [SerializeField] private Button_UI _pauseButton;
         [SerializeField] private PauseBoard_UI _pauseBoard;
+        [SerializeField] private SessionInfo_UI _sessionInfoUI;
+
+        public void Init(AudioManager audioManager, NetworkGameManager networkGameManager)
+        {
+            Init(audioManager);
+            networkGameManager.OnSessionStarted += () => _sessionInfoUI.SetSessionStatus(true);
+            networkGameManager.OnSessionShutdown += () => _sessionInfoUI.SetSessionStatus(false);
+        }
 
         public override void Init(AudioManager audioManager)
         {

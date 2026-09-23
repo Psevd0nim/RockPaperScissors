@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.76470596, b: 0.30980393, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -116,7 +116,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 700, y: 900}
+  m_SizeDelta: {x: 700, y: 700}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8450392165401127742
 MonoBehaviour:
@@ -128,32 +128,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e53a0161c3b4fcf9b3c9e1ee0d2f912, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyProject.PauseBoard_UI
-  _resumeButton: {fileID: 8450392165401127744}
-  _menuButton: {fileID: 8450392165401127743}
---- !u!114 &8450392165401127743 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4587130784804919797, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
-  m_PrefabInstance: {fileID: 2896053547210785508}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86e4426816940014c9edea54ef66e7b6, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &8450392165401127744 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4587130784804919797, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
-  m_PrefabInstance: {fileID: 6876659909987659715}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86e4426816940014c9edea54ef66e7b6, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  _resumeButton: {fileID: 6973277446006486582}
+  _menuButton: {fileID: 1700137989185477393}
 --- !u!1 &7521461665313157257
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,7 +190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5137255, g: 0.5137255, b: 0.5137255, a: 1}
+  m_Color: {r: 0.04, g: 0.04, b: 0.04, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -263,7 +241,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 350}
+  m_AnchoredPosition: {x: 0, y: 250}
   m_SizeDelta: {x: 350, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2912951981764536909
@@ -428,11 +406,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1134254046676976236, guid: fe6b3c4dd2e880b40ad18672466218ba, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 1134254046676976236, guid: fe6b3c4dd2e880b40ad18672466218ba, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -150
+      value: -250
       objectReference: {fileID: 0}
     - target: {fileID: 1134254046676976236, guid: fe6b3c4dd2e880b40ad18672466218ba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -493,6 +471,10 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 350
+      objectReference: {fileID: 0}
+    - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -526,7 +508,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -565,6 +547,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
+--- !u!114 &1700137989185477393 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4587130784804919797, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
+  m_PrefabInstance: {fileID: 2896053547210785508}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86e4426816940014c9edea54ef66e7b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillsArena.Button_UI
 --- !u!224 &2382260943641175040 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
@@ -636,7 +629,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 150
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -668,6 +661,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
   m_PrefabInstance: {fileID: 6876659909987659715}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6973277446006486582 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4587130784804919797, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
+  m_PrefabInstance: {fileID: 6876659909987659715}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86e4426816940014c9edea54ef66e7b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillsArena.Button_UI
 --- !u!1001 &7107726335039971374
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -734,11 +738,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -75
       objectReference: {fileID: 0}
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -300
+      value: -250
       objectReference: {fileID: 0}
     - target: {fileID: 666432619097269988, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

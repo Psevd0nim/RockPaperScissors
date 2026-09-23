@@ -17,6 +17,9 @@ namespace MyProject
 
     public class NetworkGameManager : MonoBehaviour
     {
+        public event Action OnSessionStarted;
+        public event Action OnSessionShutdown;
+
         public NetworkGameState State { get; private set; } = NetworkGameState.NotStarted;
         public NetworkPlayerEntity LocalPlayerEntity { get; private set; }
         public NetworkPlayerEntity OpponentPlayerEntity { get; private set; }
@@ -59,6 +62,8 @@ namespace MyProject
                 return;
             }
 
+            OnSessionStarted?.Invoke();
+            _gameUIManager.SessionInfoUI.SetRoomCode(roomCode);
             _networkService.OnSceneLoaded += TrySpawnPlayers;
         }
 
@@ -86,6 +91,7 @@ namespace MyProject
             {
                 Debug.LogException(exception);
             }
+            OnSessionShutdown?.Invoke();
         }
 
         private void NetworkGameStateChanged(NetworkGameState state)

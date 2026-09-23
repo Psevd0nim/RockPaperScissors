@@ -21,6 +21,12 @@ namespace MyProject
             }
             canvasGroup.alpha = isInteractable ? 1f : 0.5f;
             canvasGroup.interactable = isInteractable;
+
+            TryGetComponent(out BounceEffect bounceEffect);
+            if (bounceEffect != null)
+            {
+                bounceEffect.enabled = isInteractable;
+            }
         }
     }
 }

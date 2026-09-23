@@ -18,7 +18,7 @@ namespace MyProject
 
         public override void Init(AppServices appServices)
         {
-            _gameUIManager.Init(appServices.AudioManager);
+            _gameUIManager.Init(appServices.AudioManager, _networkGameManager);
             _rpsMatchManager.Init(_gameUIManager);
             _networkService = appServices.NetworkService;
             _networkGameManager.Init(_networkService, _gameUIManager, _rpsMatchManager, _factory);
