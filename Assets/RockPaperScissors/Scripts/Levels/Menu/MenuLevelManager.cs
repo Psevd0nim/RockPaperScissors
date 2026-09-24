@@ -1,4 +1,3 @@
-using Fusion.Menu;
 using UnityEngine;
 
 namespace MyProject
@@ -6,7 +5,7 @@ namespace MyProject
     public class MenuLevelManager : LevelManager
     {
         [SerializeField] private MenuLevel_UI_Manager _menuLevel_UI_Manager;
-        [SerializeField] private FusionMenuPartyCodeGenerator _menuPartyCodeGenerator;
+        [SerializeField] private FusionMenuPartyCodeGeneratorCopy _menuPartyCodeGenerator;
 
         public override void Init(AppServices appServices)
         {
@@ -22,9 +21,11 @@ namespace MyProject
 
         private void AfterPlayPressed()
         {
-            string roomCode = PlayerPrefs.GetString(Constants.RoomCodeKey, string.Empty);
-            if (roomCode == string.Empty)
+            string roomCode = _menuLevel_UI_Manager.RoomCode_UI.RoomCode;
+            if (roomCode == null || roomCode == string.Empty)
+            {
                 PlayerPrefs.SetString(Constants.RoomCodeKey, _menuPartyCodeGenerator.Create());
+            }
 
             _menuLevel_UI_Manager.DisablePlayButton();
             _menuLevel_UI_Manager.CloseTransition();

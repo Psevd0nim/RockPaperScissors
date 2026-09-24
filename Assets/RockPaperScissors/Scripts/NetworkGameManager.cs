@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Fusion;
-using Fusion.Menu;
 using UnityEngine;
 
 namespace MyProject
@@ -62,6 +61,7 @@ namespace MyProject
                 return;
             }
 
+            _gameUIManager.SessionInfoUI.Init(_networkService.Runner);
             OnSessionStarted?.Invoke();
             _gameUIManager.SessionInfoUI.SetRoomCode(roomCode);
             _networkService.OnSceneLoaded += TrySpawnPlayers;
@@ -83,6 +83,7 @@ namespace MyProject
 
         public async Task ShutdownNetworkSession()
         {
+            _gameUIManager.SessionInfoUI.SetSessionStatus(false);
             try
             {
                 await _networkService.ShutdownGameSessionAsync();

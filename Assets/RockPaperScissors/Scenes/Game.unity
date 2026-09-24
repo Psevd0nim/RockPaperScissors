@@ -5384,6 +5384,7 @@ MonoBehaviour:
   _sessionInactiveColor: {r: 1, g: 0, b: 0, a: 1}
   _roomCodeText: {fileID: 4710119736547011000}
   _copyButton: {fileID: 8077365082310202913}
+  _pingText: {fileID: 9178329506760838967}
 --- !u!114 &9178329506760838967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5404,7 +5405,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 255
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9155f914f25a6704397cbbf8e6179919, type: 2}
   m_sharedMaterial: {fileID: -5996497574426858040, guid: 9155f914f25a6704397cbbf8e6179919, type: 2}

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6db9fd4126a55c042829623716e016a8, type: 3}
-  m_Name: FusionMenuPartyCodeGenerator
-  m_EditorClassIdentifier: 
+  m_Script: {fileID: 11500000, guid: 247a30c980cc0a947a0d787ffc114f1c, type: 3}
+  m_Name: Fusion Menu Party Code Generator Copy
+  m_EditorClassIdentifier: Assembly-CSharp::MyProject.FusionMenuPartyCodeGeneratorCopy
   ValidCharacters: ABCDEFGHIJKLMNPQRSTUVWXYZ123456789
   Length: 6
   EncodedRegionPosition: 4

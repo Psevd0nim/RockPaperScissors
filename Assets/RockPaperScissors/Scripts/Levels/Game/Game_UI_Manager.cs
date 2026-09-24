@@ -24,7 +24,6 @@ namespace MyProject
         {
             Init(audioManager);
             networkGameManager.OnSessionStarted += () => _sessionInfoUI.SetSessionStatus(true);
-            networkGameManager.OnSessionShutdown += () => _sessionInfoUI.SetSessionStatus(false);
         }
 
         public override void Init(AudioManager audioManager)

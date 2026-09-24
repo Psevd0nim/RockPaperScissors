@@ -1,4 +1,4 @@
-namespace Fusion.Menu {
+namespace MyProject {
     using Fusion;
     using System;
   using System.Security.Cryptography;
@@ -9,8 +9,8 @@ namespace Fusion.Menu {
   /// Party code generator.
   /// Creates human readable random codes to be shared with other players.
   /// </summary>
-  [CreateAssetMenu(menuName = "Fusion/Menu/Party Code Generator")]
-  public class FusionMenuPartyCodeGenerator : ScriptableObject {
+  [CreateAssetMenu(menuName = "Fusion/Menu/Party Code Generator Copy")]
+  public class FusionMenuPartyCodeGeneratorCopy : ScriptableObject {
     /// <summary>
     /// Available characters for the code generation. The default setup skips O and 0 for example.
     /// </summary>

@@ -8,6 +8,9 @@ namespace MyProject
         public event Action OnPlayPressed;
         public event Action OnVsBotPressed;
 
+        public RoomCode_UI RoomCode_UI => _roomCode_UI;
+
+        [SerializeField] private RoomCode_UI _roomCode_UI;
         [SerializeField] private Button_UI _playButton;
         [SerializeField] private Button_UI _vsBotButton;
 

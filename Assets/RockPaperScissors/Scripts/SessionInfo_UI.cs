@@ -1,6 +1,8 @@
+using Fusion;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Unity.Collections.Unicode;
 
 namespace MyProject
 {
@@ -11,6 +13,10 @@ namespace MyProject
         [SerializeField] private Color _sessionInactiveColor = Color.red;
         [SerializeField] private TextMeshProUGUI _roomCodeText;
         [SerializeField] private Button_UI _copyButton;
+        [SerializeField] private TextMeshProUGUI _pingText;
+
+        private NetworkRunner _networkRunner;
+        private bool _isSessionActive;
 
         private void Awake()
         {
@@ -18,8 +24,22 @@ namespace MyProject
             SetSessionStatus(false);
         }
 
+        public void Init(NetworkRunner networkRunner)
+        {
+            _networkRunner = networkRunner;
+        }
+
+        private void Update()
+        {
+            if(_networkRunner != null && _isSessionActive)
+            {
+                UpdatePing();
+            }
+        }
+
         public void SetSessionStatus(bool isActive)
         {
+            _isSessionActive = isActive;
             if (isActive)
             {
                 _sessionIndicator.color = _sessionActiveColor;
@@ -39,6 +59,11 @@ namespace MyProject
         public void SetRoomCode(string roomCode)
         {
             _roomCodeText.text = roomCode;
+        }
+
+        public void UpdatePing()
+        {
+            _pingText.text = $"{(int)(_networkRunner.GetPlayerRtt(_networkRunner.LocalPlayer) * 1000)}";
         }
 
         private void CopyRoomCodeToClipboard()
