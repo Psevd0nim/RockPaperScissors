@@ -23,7 +23,6 @@ namespace MyProject
         public void Init(AudioManager audioManager, NetworkGameManager networkGameManager)
         {
             Init(audioManager);
-            networkGameManager.OnSessionStarted += () => _sessionInfoUI.SetSessionStatus(true);
         }
 
         public override void Init(AudioManager audioManager)

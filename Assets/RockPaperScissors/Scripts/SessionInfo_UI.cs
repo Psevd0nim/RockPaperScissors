@@ -13,10 +13,13 @@ namespace MyProject
         [SerializeField] private Color _sessionInactiveColor = Color.red;
         [SerializeField] private TextMeshProUGUI _roomCodeText;
         [SerializeField] private Button_UI _copyButton;
+        [SerializeField] private TextMeshProUGUI _regionText;
         [SerializeField] private TextMeshProUGUI _pingText;
+        [SerializeField] private int _frequencyPingUpdate;
 
         private NetworkRunner _networkRunner;
         private bool _isSessionActive;
+        private int _currentIndex;
 
         private void Awake()
         {
@@ -27,6 +30,9 @@ namespace MyProject
         public void Init(NetworkRunner networkRunner)
         {
             _networkRunner = networkRunner;
+            _roomCodeText.text = networkRunner.SessionInfo.Name;
+            _regionText.text = networkRunner.SessionInfo.Region;
+            SetSessionStatus(true);
         }
 
         private void Update()
@@ -56,14 +62,15 @@ namespace MyProject
             }
         }
 
-        public void SetRoomCode(string roomCode)
-        {
-            _roomCodeText.text = roomCode;
-        }
-
         public void UpdatePing()
         {
-            _pingText.text = $"{(int)(_networkRunner.GetPlayerRtt(_networkRunner.LocalPlayer) * 1000)}";
+            if (_currentIndex >= _frequencyPingUpdate)
+            {
+                _pingText.text = $"{(int)(_networkRunner.GetPlayerRtt(_networkRunner.LocalPlayer) * 1000)}";
+                _currentIndex = 0;
+            }
+            else
+                _currentIndex++;
         }
 
         private void CopyRoomCodeToClipboard()

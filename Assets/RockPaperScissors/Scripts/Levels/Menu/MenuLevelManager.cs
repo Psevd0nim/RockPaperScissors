@@ -23,9 +23,8 @@ namespace MyProject
         {
             string roomCode = _menuLevel_UI_Manager.RoomCode_UI.RoomCode;
             if (roomCode == null || roomCode == string.Empty)
-            {
-                PlayerPrefs.SetString(Constants.RoomCodeKey, _menuPartyCodeGenerator.Create());
-            }
+                roomCode = _menuPartyCodeGenerator.Create();
+            PlayerPrefs.SetString(Constants.RoomCodeKey, roomCode);
 
             _menuLevel_UI_Manager.DisablePlayButton();
             _menuLevel_UI_Manager.CloseTransition();
