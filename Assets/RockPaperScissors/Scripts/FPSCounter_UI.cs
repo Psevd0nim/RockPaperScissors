@@ -23,7 +23,7 @@ namespace MyProject
             if (_elapsedTime > 0.5f)
             {
                 int fps = Mathf.RoundToInt(_frameCount / _elapsedTime);
-                _fpsText.text = fps.ToString();
+                _fpsText.text = $"{fps} FPS";
 
                 _frameCount = 0;
                 _elapsedTime = 0f;

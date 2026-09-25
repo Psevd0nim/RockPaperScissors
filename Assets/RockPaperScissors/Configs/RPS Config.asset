@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MyProject.RPSConfig
   elements:
   - type: 1
-    sprite: {fileID: 21300000, guid: 8d209831a4498fe4abb9f9bd9953f4e4, type: 3}
+    sprite: {fileID: 21300000, guid: 0d79805d99f561745858a206fd5de0e1, type: 3}
   - type: 2
-    sprite: {fileID: 21300000, guid: 14636becdc13b904ebcde160a5bb2d14, type: 3}
+    sprite: {fileID: 21300000, guid: 86f6a0026c8825b4ea17b27074e72361, type: 3}
   - type: 3
-    sprite: {fileID: 21300000, guid: 1dbb40c6dda76744e9f36b881b7f13e2, type: 3}
+    sprite: {fileID: 21300000, guid: 9a5a78fed31d3b241ac0613f34a231a9, type: 3}

@@ -23,7 +23,6 @@ namespace MyProject
 
         private void Awake()
         {
-            GetComponent<CanvasGroup>().alpha = 1;
             _copyButton.OnPressed += CopyRoomCodeToClipboard;
             SetSessionStatus(false);
         }
@@ -32,7 +31,7 @@ namespace MyProject
         {
             _networkRunner = networkRunner;
             _roomCodeText.text = networkRunner.SessionInfo.Name;
-            _regionText.text = networkRunner.SessionInfo.Region;
+            _regionText.text = networkRunner.SessionInfo.Region.ToUpper();
             SetSessionStatus(true);
         }
 
@@ -49,7 +48,7 @@ namespace MyProject
             _isSessionActive = isActive;
             if (isActive)
             {
-                _sessionIndicator.color = _sessionActiveColor;
+                //_sessionIndicator.color = _sessionActiveColor;
                 _roomCodeText.enabled = true;
                 _copyButton.SetInteractableStatus(true);
 
@@ -58,7 +57,7 @@ namespace MyProject
             {
                 _roomCodeText.text = string.Empty;
                 _roomCodeText.enabled = false;
-                _sessionIndicator.color = _sessionInactiveColor;
+                //_sessionIndicator.color = _sessionInactiveColor;
                 _regionText.text = string.Empty;
                 _pingText.text = string.Empty;
                 _copyButton.SetInteractableStatus(false);
@@ -69,7 +68,7 @@ namespace MyProject
         {
             if (_currentIndex >= _frequencyPingUpdate)
             {
-                _pingText.text = $"{(int)(_networkRunner.GetPlayerRtt(_networkRunner.LocalPlayer) * 1000)}";
+                _pingText.text = $"{(int)(_networkRunner.GetPlayerRtt(_networkRunner.LocalPlayer) * 1000)} ms";
                 _currentIndex = 0;
             }
             else
