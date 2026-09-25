@@ -12,7 +12,7 @@ namespace MyProject
 
         private void Awake()
         {
-            _fpsText.text = "***";
+            _fpsText.text = string.Empty;
         }
 
         private void Update()

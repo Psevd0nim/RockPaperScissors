@@ -23,7 +23,8 @@ namespace MyProject
             _networkService = appServices.NetworkService;
             _networkGameManager.Init(_networkService, _gameUIManager, _rpsMatchManager, _factory);
 
-            _gameUIManager.MenuPressed += ExitToMenu;
+            _gameUIManager.OnMenuPressed += ExitToMenu;
+            _gameUIManager.OnRetryPressed += () => _networkGameManager.StartNetworkSession(_isOfflineMode ? GameMode.Single : GameMode.Shared);
 
             if (_enableOfflineMode)
                 _isOfflineMode = true;
@@ -55,7 +56,7 @@ namespace MyProject
 
         private void OnDestroy()
         {
-            _gameUIManager.MenuPressed -= ExitToMenu;
+            _gameUIManager.OnMenuPressed -= ExitToMenu;
         }
     }
 }

@@ -35,6 +35,7 @@ namespace MyProject
             _factory = factory;
             _networkService.PlayersChanged += TryUpdateMatchState;
             _networkService.PlayerEntitiesChanged += TryUpdateMatchState;
+            _networkService.OnDisconnected += AfterDisconnected;
         }
 
         public async void StartNetworkSession(GameMode gameMode)
@@ -63,8 +64,15 @@ namespace MyProject
             _networkService.OnSceneLoaded += TrySpawnPlayers;
         }
 
+        private void AfterDisconnected()
+        {
+            ChangeState(NetworkGameState.ConnectionFailed);
+        }
+
         private void TrySpawnPlayers()
         {
+            _networkService.OnSceneLoaded -= TrySpawnPlayers;
+
             NetworkRunner runner = _networkService.Runner;
 
             LocalPlayerEntity = _factory.SpawnLocalPlayer(runner);
@@ -106,7 +114,14 @@ namespace MyProject
                     _gameUIManager.HideConnectingIndicator();
 
                     if (_rpsMatchManager.IsMatchActive)
+                    {
                         _rpsMatchManager.EndMatch();
+
+                        if (LocalPlayerEntity.Object != null && LocalPlayerEntity.Object.IsValid)
+                        {
+                            LocalPlayerEntity.Reset();
+                        }
+                    }
 
                     _gameUIManager.ShowLocalPlayer(LocalPlayerEntity.Nickname);
                     _gameUIManager.ShowWaitingForOpponent();
@@ -116,14 +131,23 @@ namespace MyProject
                     _rpsMatchManager.StartMatch(LocalPlayerEntity, OpponentPlayerEntity, isOfflineMode: _gameMode == GameMode.Single);
                     break;
                 case NetworkGameState.ConnectionFailed:
+                    _rpsMatchManager.EndMatch();
+
+                    LocalPlayerEntity = null;
+                    OpponentPlayerEntity = null;
+
                     _gameUIManager.HideConnectingIndicator();
                     _gameUIManager.ShowConnectionFailed();
+                    _gameUIManager.SessionInfoUI.SetSessionStatus(false);
                     break;
             }
         }
 
         private void TryUpdateMatchState()
         {
+            if (_gameMode != GameMode.Single)
+                _gameUIManager.ShowPlayersCount(PlayersCount);
+
             if (LocalPlayerEntity == null)
                 return;
 
@@ -179,6 +203,7 @@ namespace MyProject
             _networkService.PlayersChanged -= TryUpdateMatchState;
             _networkService.PlayerEntitiesChanged -= TryUpdateMatchState;
             _networkService.OnSceneLoaded -= TrySpawnPlayers;
+            _networkService.OnDisconnected -= AfterDisconnected;
         }
     }
 }

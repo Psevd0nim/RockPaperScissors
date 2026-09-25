@@ -7,7 +7,8 @@ namespace MyProject
     public class Game_UI_Manager : UI_Manager
     {
         public event Action<RPSElementType> ElementSelected;
-        public event Action MenuPressed;
+        public event Action OnMenuPressed;
+        public event Action OnRetryPressed;
 
         public SessionInfo_UI SessionInfoUI => _sessionInfoUI;
 
@@ -19,6 +20,7 @@ namespace MyProject
         [SerializeField] private Button_UI _pauseButton;
         [SerializeField] private PauseBoard_UI _pauseBoard;
         [SerializeField] private SessionInfo_UI _sessionInfoUI;
+        [SerializeField] private ConnectionFailed_UI _connectionFailedPanel;
 
         public void Init(AudioManager audioManager, NetworkGameManager networkGameManager)
         {
@@ -34,9 +36,12 @@ namespace MyProject
 
             _pauseBoard.Init();
             _pauseBoard.ResumePressed += HidePausePanel;
-            _pauseBoard.MenuPressed += OnMenuPressed;
+            _pauseBoard.MenuPressed += MenuPressed;
 
             _pauseButton.OnPressed += ShowPausePanel;
+
+            _connectionFailedPanel.MenuButton.OnPressed += MenuPressed;
+            _connectionFailedPanel.RetryButton.OnPressed += RetryPressed;
 
             HidePausePanel();
         }
@@ -75,9 +80,15 @@ namespace MyProject
 
         public void ShowConnectionFailed()
         {
-            _statusText.text = "Connection failed";
-            _statusText.gameObject.SetActive(true);
+            HidePlayersCount();
             _rpsRoundInfoUI.Hide();
+            _connectionFailedPanel.gameObject.SetActive(true);
+        }
+
+        public void RetryPressed()
+        {
+            _connectionFailedPanel.gameObject.SetActive(false);
+            OnRetryPressed?.Invoke();
         }
 
         public void ShowGame(string localPlayerName, string opponentPlayerName)
@@ -121,9 +132,9 @@ namespace MyProject
             _pausePanel.SetActive(false);
         }
 
-        private void OnMenuPressed()
+        private void MenuPressed()
         {
-            MenuPressed?.Invoke();
+            OnMenuPressed?.Invoke();
         }
 
         private void OnDestroy()
@@ -131,7 +142,7 @@ namespace MyProject
             _rpsRoundInfoUI.ElementSelected -= OnElementSelected;
             _pauseButton.OnPressed -= ShowPausePanel;
             _pauseBoard.ResumePressed -= HidePausePanel;
-            _pauseBoard.MenuPressed -= OnMenuPressed;
+            _pauseBoard.MenuPressed -= MenuPressed;
         }
     }
 }

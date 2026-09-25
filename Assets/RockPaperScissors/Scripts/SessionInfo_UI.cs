@@ -2,7 +2,7 @@ using Fusion;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static Unity.Collections.Unicode;
+using WebGLCopyAndPaste;
 
 namespace MyProject
 {
@@ -23,6 +23,7 @@ namespace MyProject
 
         private void Awake()
         {
+            GetComponent<CanvasGroup>().alpha = 1;
             _copyButton.OnPressed += CopyRoomCodeToClipboard;
             SetSessionStatus(false);
         }
@@ -56,8 +57,10 @@ namespace MyProject
             else
             {
                 _roomCodeText.text = string.Empty;
-                _sessionIndicator.color = _sessionInactiveColor;
                 _roomCodeText.enabled = false;
+                _sessionIndicator.color = _sessionInactiveColor;
+                _regionText.text = string.Empty;
+                _pingText.text = string.Empty;
                 _copyButton.SetInteractableStatus(false);
             }
         }
@@ -75,7 +78,8 @@ namespace MyProject
 
         private void CopyRoomCodeToClipboard()
         {
-            GUIUtility.systemCopyBuffer = _roomCodeText.text;
+            //GUIUtility.systemCopyBuffer = _roomCodeText.text;
+            WebGLCopyAndPasteAPI.CopyToClipboard(_roomCodeText.text);
         }
     }
 }

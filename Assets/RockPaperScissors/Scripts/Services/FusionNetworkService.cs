@@ -13,6 +13,7 @@ namespace MyProject
         public event Action PlayersChanged;
         public event Action PlayerEntitiesChanged;
         public event Action OnSceneLoaded;
+        public event Action OnDisconnected;
 
         public NetworkRunner Runner => _runner;
         public List<PlayerRef> Players => _players;
@@ -126,6 +127,11 @@ namespace MyProject
             OnSceneLoaded?.Invoke();
         }
 
+        public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
+        {
+            OnDisconnected?.Invoke();
+        }
+
         #region UnusedCallbacks
         public void OnConnectedToServer(NetworkRunner runner)
         {
@@ -140,10 +146,6 @@ namespace MyProject
         }
 
         public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
-        {
-        }
-
-        public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
         {
         }
 

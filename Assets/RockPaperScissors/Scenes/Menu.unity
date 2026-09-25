@@ -2888,11 +2888,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1884335539661143340, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_text
-      value: PLAY
+      value: Play
       objectReference: {fileID: 0}
     - target: {fileID: 1884335539661143340, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_fontSize
-      value: 125
+      value: 118
+      objectReference: {fileID: 0}
+    - target: {fileID: 1884335539661143340, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
+      propertyPath: m_margin.y
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1884335539661143340, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_fontStyle
@@ -2932,6 +2936,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6686992735827390881, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6686992735827390881, guid: 6c6a8efd2df929142b34860779fcd8db, type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

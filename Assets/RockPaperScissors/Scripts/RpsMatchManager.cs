@@ -53,8 +53,6 @@ namespace MyProject
                 _opponentPlayerEntity.ScoreChanged -= UpdateScores;
             }
 
-            _localPlayerEntity.Reset();
-
             _localPlayerEntity = null;
             _opponentPlayerEntity = null;
         }
