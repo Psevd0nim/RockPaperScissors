@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 50a24a874f07ba64b8dadcc58262b7e2
+guid: fa30d491ce0980e4f8c4d7c11eb12858
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3237074689284948339
-    second: Button Filled_0
+      213: -8503093942092619827
+    second: volume_0
+  - first:
+      213: -4070619982659432352
+    second: volume_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,13 +49,13 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
-  spriteBorder: {x: 3, y: 11, z: 3, w: 11}
+  spritePixelsToUnits: 512
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -126,23 +129,45 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Button Filled_0
+      name: volume_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 8
-        width: 64
-        height: 16
+        x: 24
+        y: 75
+        width: 233
+        height: 362
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 3, y: 3, z: 3, w: 3}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 371cc3677466cec20800000000000000
-      internalID: 3237074689284948339
+      spriteID: dcf1bc96c11fef980800000000000000
+      internalID: -8503093942092619827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: volume_1
+      rect:
+        serializedVersion: 2
+        x: 306
+        y: 178
+        width: 156
+        height: 156
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0605afd51b04287c0800000000000000
+      internalID: -4070619982659432352
       vertices: []
       indices: 
       edges: []
@@ -152,7 +177,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    internalID: 0
     vertices: []
     indices: 
     edges: []
@@ -161,7 +186,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Button Filled_0: 3237074689284948339
+      volume_0: -8503093942092619827
+      volume_1: -4070619982659432352
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

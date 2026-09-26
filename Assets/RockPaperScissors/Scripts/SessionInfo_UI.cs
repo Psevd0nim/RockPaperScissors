@@ -8,9 +8,6 @@ namespace MyProject
 {
     public class SessionInfo_UI : MonoBehaviour
     {
-        [SerializeField] private Image _sessionIndicator;
-        [SerializeField] private Color _sessionActiveColor = Color.green;
-        [SerializeField] private Color _sessionInactiveColor = Color.red;
         [SerializeField] private TextMeshProUGUI _roomCodeText;
         [SerializeField] private Button_UI _copyButton;
         [SerializeField] private TextMeshProUGUI _regionText;
@@ -23,8 +20,9 @@ namespace MyProject
 
         private void Awake()
         {
-            _copyButton.OnPressed += CopyRoomCodeToClipboard;
+            gameObject.SetActive(false);
             SetSessionStatus(false);
+            _copyButton.OnPressed += CopyRoomCodeToClipboard;
         }
 
         public void Init(NetworkRunner networkRunner)
@@ -48,19 +46,18 @@ namespace MyProject
             _isSessionActive = isActive;
             if (isActive)
             {
-                //_sessionIndicator.color = _sessionActiveColor;
                 _roomCodeText.enabled = true;
                 _copyButton.SetInteractableStatus(true);
-
+                gameObject.SetActive(true);
             }
             else
             {
                 _roomCodeText.text = string.Empty;
                 _roomCodeText.enabled = false;
-                //_sessionIndicator.color = _sessionInactiveColor;
                 _regionText.text = string.Empty;
                 _pingText.text = string.Empty;
                 _copyButton.SetInteractableStatus(false);
+                gameObject.SetActive(false);
             }
         }
 

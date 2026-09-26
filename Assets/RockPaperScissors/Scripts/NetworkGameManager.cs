@@ -100,11 +100,6 @@ namespace MyProject
 
         private void NetworkGameStateChanged(NetworkGameState state)
         {
-            if (_gameMode == GameMode.Single)
-                _gameUIManager.HidePlayersCount();
-            else
-                _gameUIManager.ShowPlayersCount(PlayersCount);
-
             switch (state)
             {
                 case NetworkGameState.Connecting:
@@ -145,9 +140,6 @@ namespace MyProject
 
         private void TryUpdateMatchState()
         {
-            if (_gameMode != GameMode.Single)
-                _gameUIManager.ShowPlayersCount(PlayersCount);
-
             if (LocalPlayerEntity == null)
                 return;
 
@@ -200,10 +192,13 @@ namespace MyProject
 
         private void OnDestroy()
         {
-            _networkService.PlayersChanged -= TryUpdateMatchState;
-            _networkService.PlayerEntitiesChanged -= TryUpdateMatchState;
-            _networkService.OnSceneLoaded -= TrySpawnPlayers;
-            _networkService.OnDisconnected -= AfterDisconnected;
+            if (_networkService != null)
+            {
+                _networkService.PlayersChanged -= TryUpdateMatchState;
+                _networkService.PlayerEntitiesChanged -= TryUpdateMatchState;
+                _networkService.OnSceneLoaded -= TrySpawnPlayers;
+                _networkService.OnDisconnected -= AfterDisconnected;
+            }
         }
     }
 }

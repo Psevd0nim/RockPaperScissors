@@ -126,7 +126,8 @@ namespace MyProject
 
         private void OnDestroy()
         {
-            _gameUI.ElementSelected -= SelectElement;
+            if(_gameUI != null)
+                _gameUI.ElementSelected -= SelectElement;
         }
     }
 }

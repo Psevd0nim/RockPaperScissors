@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,11 +13,12 @@ namespace MyProject
 
         [SerializeField] private RPSConfig _rpsConfig;
         [SerializeField] private List<RPSButton_UI> _elementButtons;
-        [SerializeField] private TextMeshProUGUI _localPlayerText;
-        [SerializeField] private TextMeshProUGUI _opponentPlayerText;
+        [SerializeField] private PlayerInfo_UI _localPlayerInfo;
+        [SerializeField] private PlayerInfo_UI _opponentPlayerInfo;
         [SerializeField] private Image _localSelectedElementImage;
         [SerializeField] private Image _opponentSelectedElementImage;
         [SerializeField] private TextMeshProUGUI _roundResultText;
+        [SerializeField] private GameObject _rpsButtonsParent;
 
         private string _localPlayerName;
         private string _opponentPlayerName;
@@ -35,7 +37,7 @@ namespace MyProject
             _localPlayerName = GetDisplayedName(localPlayerName);
 
             gameObject.SetActive(true);
-            _localPlayerText.text = $"YOU\n{_localPlayerName}\nScore: 0";
+            _localPlayerInfo.SetNickname(_localPlayerName);
         }
 
         public void ShowWaitingForOpponent()
@@ -43,7 +45,7 @@ namespace MyProject
             _opponentPlayerName = null;
 
             gameObject.SetActive(true);
-            _opponentPlayerText.text = "OPPONENT\nWaiting for opponent...";
+            _opponentPlayerInfo.SetWaiting();
             HideRoundControls();
         }
 
@@ -53,8 +55,8 @@ namespace MyProject
             _opponentPlayerName = GetDisplayedName(opponentPlayerName);
 
             gameObject.SetActive(true);
-            _localPlayerText.text = $"YOU\n{_localPlayerName}\nScore: 0";
-            _opponentPlayerText.text = $"OPPONENT\n{_opponentPlayerName}\nScore: 0";
+            _localPlayerInfo.SetNickname(_localPlayerName);
+            _opponentPlayerInfo.SetNickname(_opponentPlayerName);
 
             ShowElementSelection();
         }
@@ -66,14 +68,14 @@ namespace MyProject
 
         public void ShowLocalSelectedElement(RPSElementType elementType)
         {
-            ShowElement(_localSelectedElementImage, elementType);
+            _localPlayerInfo.SetSelectedElement(_rpsConfig.GetSpriteByType(elementType));
             SetElementButtonsActive(false);
         }
 
         public void ShowRound(RPSElementType localElement, RPSElementType opponentElement, RpsRoundResult result)
         {
-            ShowElement(_localSelectedElementImage, localElement);
-            ShowElement(_opponentSelectedElementImage, opponentElement);
+            _localPlayerInfo.SetSelectedElement(_rpsConfig.GetSpriteByType(localElement));
+            _opponentPlayerInfo.SetSelectedElement(_rpsConfig.GetSpriteByType(opponentElement));
 
             _roundResultText.text = result.ToString();
             _roundResultText.gameObject.SetActive(true);
@@ -81,14 +83,14 @@ namespace MyProject
 
         public void UpdateScores(int localScore, int opponentScore)
         {
-            _localPlayerText.text = $"YOU\n{_localPlayerName}\nScore: {localScore}";
-            _opponentPlayerText.text = $"OPPONENT\n{_opponentPlayerName}\nScore: {opponentScore}";
+            _localPlayerInfo.UpdateScoreText(localScore);
+            _opponentPlayerInfo.UpdateScoreText(opponentScore);
         }
 
         public void ShowElementSelection()
         {
-            _localSelectedElementImage.gameObject.SetActive(false);
-            _opponentSelectedElementImage.gameObject.SetActive(false);
+            _localPlayerInfo.HideSelectedElement();
+            _opponentPlayerInfo.HideSelectedElement();
             _roundResultText.gameObject.SetActive(false);
             SetElementButtonsActive(true);
         }
@@ -98,22 +100,15 @@ namespace MyProject
             ElementSelected?.Invoke(elementType);
         }
 
-        private void ShowElement(Image elementImage, RPSElementType elementType)
-        {
-            elementImage.sprite = _rpsConfig.GetSpriteByType(elementType);
-            elementImage.gameObject.SetActive(true);
-        }
-
         private void SetElementButtonsActive(bool isActive)
         {
-            foreach (RPSButton_UI elementButton in _elementButtons)
-                elementButton.gameObject.SetActive(isActive);
+            _rpsButtonsParent.gameObject.SetActive(isActive);
         }
 
         private void HideRoundControls()
         {
-            _localSelectedElementImage.gameObject.SetActive(false);
-            _opponentSelectedElementImage.gameObject.SetActive(false);
+            _localPlayerInfo.HideSelectedElement();
+            _opponentPlayerInfo.HideSelectedElement();
             _roundResultText.gameObject.SetActive(false);
             SetElementButtonsActive(false);
         }

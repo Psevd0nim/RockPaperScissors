@@ -13,8 +13,6 @@ namespace MyProject
         public SessionInfo_UI SessionInfoUI => _sessionInfoUI;
 
         [SerializeField] private ConnectingIndicator _connectingIndicator;
-        [SerializeField] private TextMeshProUGUI _countPlayersText;
-        [SerializeField] private TextMeshProUGUI _statusText;
         [SerializeField] private RPSRoundInfo_UI _rpsRoundInfoUI;
         [SerializeField] private GameObject _pausePanel;
         [SerializeField] private Button_UI _pauseButton;
@@ -33,6 +31,7 @@ namespace MyProject
 
             _rpsRoundInfoUI.Init();
             _rpsRoundInfoUI.ElementSelected += OnElementSelected;
+            _rpsRoundInfoUI.gameObject.SetActive(false);
 
             _pauseBoard.Init();
             _pauseBoard.ResumePressed += HidePausePanel;
@@ -44,17 +43,6 @@ namespace MyProject
             _connectionFailedPanel.RetryButton.OnPressed += RetryPressed;
 
             HidePausePanel();
-        }
-
-        public void ShowPlayersCount(int playersCount)
-        {
-            _countPlayersText.gameObject.SetActive(true);
-            _countPlayersText.text = $"Players: {playersCount}";
-        }
-
-        public void HidePlayersCount()
-        {
-            _countPlayersText.gameObject.SetActive(false);
         }
 
         public void ShowConnectingIndicator()
@@ -74,13 +62,11 @@ namespace MyProject
 
         public void ShowWaitingForOpponent()
         {
-            _statusText.gameObject.SetActive(false);
             _rpsRoundInfoUI.ShowWaitingForOpponent();
         }
 
         public void ShowConnectionFailed()
         {
-            HidePlayersCount();
             _rpsRoundInfoUI.Hide();
             _connectionFailedPanel.gameObject.SetActive(true);
         }
@@ -93,7 +79,6 @@ namespace MyProject
 
         public void ShowGame(string localPlayerName, string opponentPlayerName)
         {
-            _statusText.gameObject.SetActive(false);
             _rpsRoundInfoUI.Show(localPlayerName, opponentPlayerName);
         }
 

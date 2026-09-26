@@ -12,7 +12,7 @@ namespace MyProject
 
         private void Awake()
         {
-            _fpsText.text = string.Empty;
+            _fpsText.text = $"{240} FPS";
         }
 
         private void Update()
