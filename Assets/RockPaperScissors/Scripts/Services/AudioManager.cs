@@ -4,16 +4,16 @@ namespace MyProject
 {
     public class AudioManager : MonoBehaviour, IService
     {
-        public bool AudioActive { get; private set; }
+        public bool AudioEnable { get; private set; }
 
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioSource _backgroundAudioSource;
         [SerializeField] private SoundConfig _soundConfig;
 
-        private void Awake()
+        private void Start()
         {
-            AudioActive = PlayerPrefs.GetInt(Constants.SoundVolumeKey, 1) == 1;
-            SetAudioStatus(AudioActive);
+            AudioEnable = PlayerPrefs.GetInt(Constants.SoundVolumeKey, 1) == 1;
+            SetAudioStatus(AudioEnable);
         }
 
         public void PlaySomeSound(SoundType type)
@@ -24,8 +24,8 @@ namespace MyProject
 
         public void SetAudioStatus(bool status)
         {
-            AudioActive = status;
-            AudioListener.volume = AudioActive ? 1 : 0;
+            AudioEnable = status;
+            AudioListener.volume = AudioEnable ? 1 : 0;
         }
 
         public void SetBackgroundStatus(bool status)

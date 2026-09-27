@@ -13,14 +13,14 @@ namespace MyProject
         {
             _audioManager = audioManager;
             _soundButton.OnPressed += AfterSoundButtonPressed;
-            _soundButton.SetActive(_audioManager.AudioActive);
+            _soundButton.SetActive(_audioManager.AudioEnable);
         }
 
         private void AfterSoundButtonPressed()
         {
-            _audioManager.SetAudioStatus(!_audioManager.AudioActive);
-            _soundButton.SetActive(_audioManager.AudioActive);
-            _audioManager.PlaySomeSound(SoundType.ClickButton);
+            _audioManager.SetAudioStatus(!_audioManager.AudioEnable);
+            _soundButton.SetActive(_audioManager.AudioEnable);
+           //_audioManager.PlaySomeSound(SoundType.ClickButton);
         }
 
         public void OpenTransition()

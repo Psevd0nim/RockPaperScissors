@@ -30,14 +30,6 @@ namespace MyProject
 
     public enum SoundType
     {
-        ClickButton = 0, 
-        Tutorial = 1, 
-        TakeSkill = 2, 
-        SetSkill = 3, 
-        CaptureSkill = 4, 
-        Fight = 5, 
-        TakeDamage = 6,
-        FullCollected = 7,
-        GameOver = 8
+
     }
 }

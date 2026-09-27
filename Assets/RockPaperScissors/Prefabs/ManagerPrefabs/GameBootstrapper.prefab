@@ -43,7 +43,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 3c7a95c79799ee84a8203f6e01b4d5aa, type: 3}
+  m_Resource: {fileID: 8300000, guid: 7a2a14fe8fd42f54da8abe60f5a9c6cf, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.1
   m_Pitch: 1
@@ -353,3 +353,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameBootstrapper
   _audioManager: {fileID: 7561929875095970009}
+  _startWithCurrentScene: 0
